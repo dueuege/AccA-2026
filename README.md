@@ -46,6 +46,25 @@ phone and run `su -c 'sh install-tarball.sh acc'` there.
 > `/data/local/tmp/acc[-_]*`, including the tarball being installed, and the install aborts with
 > `cp: can't stat …/install/*`.
 
+## Using ACC from Termux
+
+ACC only runs as root, and Termux runs as a normal app user, so plain `acc` in Termux is always
+"not found". Go through `su`:
+
+```
+su -c 'acc -i'          # after a reboot (Magisk puts acc in /system/bin at boot)
+su -c '/dev/acc -i'     # right after installing, before the first reboot
+```
+
+Or open a root shell with `su` and type `acc …` directly (`/dev/acc …` before the first reboot).
+
+## How AccA talks to ACC
+
+AccA has no ACC of its own. It runs the installed module through `/dev/.vr25/acc/acca` (a link to
+`/data/adb/vr25/acc/acca.sh`), so whatever `scripts/install-acc.sh` installed is what AccA controls.
+Its Restart button runs `acca -D restart`: the old daemon releases the charging switch, and the new
+one takes over a few seconds later. For that short window the phone may charge.
+
 ## Useful commands (as root)
 
 ```
