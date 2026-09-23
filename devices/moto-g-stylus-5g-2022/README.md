@@ -21,10 +21,37 @@ Installed ACC rc24 with `scripts/install-acc.sh`. The existing config (pause 60%
 migrated. Right after install:
 
 - `accd` running; auto-selected switch `battery/device/force_charger_suspend 0 1`
-- at 96% (above the 60% pause level): switch engaged, charger input 0 mA, battery current about 0
-  (ACC classifies it as `bypass`); the kernel `status` still says "Charging", which is a stale
-  label, not real charging
 - AccA dashboard shows "ACC Daemon is Running" and reads the switch and limits from ACC
+
+## Charging switch in use: `battery/charge_control_limit`
+
+```
+chargingSwitch=(battery/charge_control_limit 0 battery/charge_control_limit_max --)
+```
+
+The auto pick, `battery/device/force_charger_suspend`, is **not reliable** on this phone, so it
+was replaced. Measured by writing each switch "off" by hand (ACC stopped, 10 s settle, cable in,
+battery at 97%):
+
+| Switch (off) | kernel `status` | Android status | battery current |
+|---|---|---|---|
+| `battery/device/force_charger_suspend` = 1 | Charging | 2 (charging) | **+478 mA, still charging** |
+| `battery/charge_control_limit` = max (8) | **Not charging** | **4 (not charging)** | −6 mA (idle) |
+| `battery/current_max` = 0 | **Not charging** | **4 (not charging)** | −6 mA (idle) |
+| `charger/input_current_limit` = 0 | Charging | 2 | ~0 |
+| `usb/input_current_limit` = 0 | Charging | 2 | ~0 |
+| `usb/device/force_charger_suspend` = 1 | Charging | 2 | −196 mA |
+
+`charge_control_limit` truly idles the battery (the phone runs from the charger), and with it the
+Motorola driver reports "Not charging". Most other switches leave the kernel saying "Charging", so
+Android's UI shows charging even when it isn't. `battery/current_max` is the fallback.
+
+When changing away from `force_charger_suspend`, set it back to 0 by hand
+(`echo 0 > /sys/class/power_supply/battery/device/force_charger_suspend`); ACC does not reset a
+switch it no longer manages.
+
+The status-bar lightning bolt stays while the cable is in: stock Android draws it whenever the
+phone is plugged in. Android's battery status (`dumpsys battery`) is the real indicator.
 
 ## Switch test (`acc -t`, 2026-09-23, on USB/PC power)
 
@@ -40,7 +67,7 @@ Working, **battery idle** (phone runs from the charger, battery neither charges 
 
 Working, charging cut (battery supplies the phone):
 
-- `battery/device/force_charger_suspend 0 1` (ACC's current auto pick)
+- `battery/device/force_charger_suspend 0 1` (passed here, but did not hold later; see above)
 - `usb/device/force_charger_suspend 0 1`
 - `dc/current_max 3000000 0`, `pc_port/current_max 3000000 0`, `usb/current_max 3000000 0`
 - `battery/constant_charge_current_max 5000000 0`
@@ -54,10 +81,10 @@ Not working: `battery/constant_charge_current*` (other values), `battery/input_c
 The test ran on a PC USB port (about 0.5 A). Results can differ on a fast (USB-PD) charger; re-run
 `acc -t` or AccA's "Find my charging switch" on the charger you normally use.
 
-To pin the idle-mode switch instead of the auto pick (useful if the phone stays plugged in a lot):
+To set the switch again (e.g. if AccA re-locks a different one):
 
 ```
-su -c 'acc -s s="battery/charge_control_limit 0 battery/charge_control_limit_max --"'
+su -c '/dev/acc -s s="battery/charge_control_limit 0 battery/charge_control_limit_max --"'
 ```
 
-`config.txt` is the phone's ACC config as of this install.
+`config.txt` is the phone's working ACC config (pause 60%, resume 35%, `charge_control_limit`).
