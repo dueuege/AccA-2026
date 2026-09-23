@@ -15,7 +15,8 @@ level) and **AccA** (its Android front-end app), pinned to versions that are ver
 | `scripts/install-acc.sh` | Installs `dist/acc_*.tgz` on a phone over adb (optionally the APK too) | this repo |
 | `devices/` | Per-phone notes: switch test results, working config | this repo |
 
-`acc/` and `AccA/` are unmodified snapshots of the tagged fork sources (`git archive` of each tag).
+`acc/` and `AccA/` are snapshots of the tagged fork sources (`git archive` of each tag), unmodified
+apart from line endings: a few upstream `.txt` files were stored with CRLF and are LF here.
 
 ## Why these versions
 
