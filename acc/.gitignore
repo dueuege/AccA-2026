@@ -1,0 +1,16 @@
+_builds
+_misc
+.directory
+*.kate-swp
+
+# dev-only session notes + local test scripts (never publish)
+HANDOFF*.md
+FIX-PLAN*.md
+acc-hardtest.sh
+bt-test.sh
+obs.sh
+probe-scheduler.sh
+_shipping
+.scratch/
+AMPS-AUDIT.md
+AMPS-CHANGELOG.md

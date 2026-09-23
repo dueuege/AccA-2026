@@ -1,0 +1,216 @@
+ls_ch_switches() {
+  echo "
+# Pixel/Tensor charge-limit node tried FIRST (before the */charging_state wildcard trap,
+# which reports stopped while current keeps flowing). Both drivings are offered -- the
+# stable on=100/off=pause_capacity, and the 2022/2023 on=100/off=5 that users confirm
+# worked -- and the current-verification in cycle_switches keeps whichever actually cuts.
+/sys/devices/platform/google,charger/charge_stop_level 100 pcap
+/sys/devices/platform/google,charger/charge_stop_level 100 5
+
+# Pixel/Tensor multi-path current cut, as ONE group so the current-verified auto-lock
+# locks ALL paths together. On these SoCs (e.g. Pixel 9a, Android 16) charging is fed by
+# several independent paths (main-charger, gccd, rt9471, dc, usb); zeroing a SINGLE
+# current node leaves another path feeding the cell, so a single-node switch fails to
+# stop charging. Chaining every google charge-current path on one line forces them all
+# to 0 at once = a real hard pause. On values are high (the kernel clamps to its own max
+# on restore); off = 0. Placed HIGH (before the wildcard charging_state trap) so this is
+# what the auto-lock latches onto. Paths that are absent simply no-op.
+battery/constant_charge_current 5000000 0 main-charger/current_max 5000000 0 usb/current_max 5000000 0 gccd/current_max 5000000 0 dc/current_max 5000000 0
+
+*/*charging_enable* 1 0
+*/*disable_charg* 0 1
+*/charge_disable 0 1
+*/charge_enabled 1 0
+*/charger_control 1 0
+*/charging_state enabled disabled
+*/enable_charg* 1 0
+*/input_suspend 0 1
+battery/batt_slate_mode 0 1
+battery/battery_input_suspend 0 1
+battery/bd_trickle_cnt 0 1
+battery/device/*stop_charging 0 1
+battery/device/Charging_Enable 1 0
+battery/op_disable_charge 0 1
+#battery/store_mode 0 1
+battery/test_mode 2 1
+battery_ext/smart_charging_interruption 0 1
+idt/pin_enabled 1 0
+battery/siop_level 100 0
+
+# OnePlus/OPPO (some ColorOS builds expose ONLY this) -- rc16 coverage gap fix
+/sys/oplus/battery/mmi_charging_enable 1 0
+oplus_chg/battery/mmi_charging_enable 1 0
+
+# Samsung One UI charge-limit node (SOC-relative): on=100 (charge up), off=pcap so
+# the firmware holds at your limit. rc16 coverage gap fix.
+*/batt_full_capacity 100 pcap
+
+battery/charging_enabled 0 0 battery/op_disable_charge 0 1 battery/charging_enabled 1 1
+battery/input_suspend 0 1 /proc/mtk_battery_cmd/en_power_path 1 1
+
+/proc/*disable_chrg 0 1
+/sys/class/asuslib/charger_limit_en 0 1
+/sys/class/asuslib/charging_suspend_en 0 1
+/sys/class/battchg_ext/*charge_disable 0 1
+/sys/class/battchg_ext/*input_suspend 0 1
+/sys/class/hw_power/charger/charge_data/enable_charger 1 0
+/sys/class/qcom-battery/charging_enabled 1 0
+/sys/class/qcom-battery/input_suspend 0 1
+# rc15: restrict_chg -- the qcom-battery restrict toggle the acc-compat field tester saw the FIRMWARE
+# itself flip 0->1 to STOP charging (FP5/lahaina log). A clean input-cut on devices that lack a working
+# input_suspend. Additive; ACC verifies it holds before locking, so a no-op node is harmless.
+/sys/class/qcom-battery/restrict_chg 0 1
+/sys/class/qcom-battery/odm_battery/restrict_chg 0 1
+# rc(6.4-rc2): the odm_battery sub-path is a separate qcom-battery layout (newer Xiaomi/
+# HyperOS); the acc-compat field tester found these held+resumed where the top-level node
+# was absent. Additive -- devices that expose the standard node are unaffected.
+/sys/class/qcom-battery/odm_battery/input_suspend 0 1
+/sys/class/qcom-battery/odm_battery/charging_enabled 1 0
+/sys/class/qcom-battery/odm_battery/hq_test_input_suspend 0 1
+/sys/devices/*/*/*/charging_state enabled disabled
+/sys/devices/platform/*/*/*/charging_state enabled disabled
+/sys/devices/platform/charger/bypass_charger 0 1
+/sys/devices/platform/huawei_charger/enable_charger 1 0
+/sys/devices/platform/lge-unified-nodes/charging_completed 0 1
+/sys/devices/platform/lge-unified-nodes/charging_enable 1 0
+/sys/devices/platform/mt-battery/disable_charger 0 1
+/sys/devices/platform/omap/omap_i2c.?/i2c-?/?-00??/charge_enable 1 0
+/sys/devices/platform/soc/soc:google,charger/charge_disable 0 1
+/sys/devices/platform/soc/soc:oplus,chg_intf/oplus_chg/battery/*charging_enable 1 0
+/sys/devices/platform/soc/soc:qcom,pmic_glink/soc:qcom,pmic_glink:qcom,battery_charger/force_charger_suspend 0 1
+# acc-compat v5.7 field tester (Motorola Edge 50 Pro, qti_glink/crow, Android 16): the per-supply
+# device/ variants of force_charger_suspend held as an input-cut where the top-level node above did
+# not cover them. Additive -- absent on other devices => no-op; the daemon's reliability order ranks
+# them below any native-level/CUT switch. (Path-dependent: held on wireless, can be weak on fast PD.)
+battery/device/force_charger_suspend 0 1
+usb/device/force_charger_suspend 0 1
+wireless/device/force_charger_suspend 0 1
+/sys/devices/soc/soc:lge,*/lge_power/lge_*/charging_enabled 1 0
+/sys/devices/virtual/oplus_chg/battery/*charging_enable 1 0
+/sys/kernel/debug/google_charger/chg_suspend 0 1
+/sys/kernel/debug/google_charger/input_suspend 0 1
+/sys/kernel/nubia_charge/charger_bypass off on
+/sys/module/pm*_charger/parameters/disabled 0 1
+
+# Set CHARGE/INPUT CURRENT to 0 = stop. On newer kernels (e.g. Android-16 Pixel 9a)
+# the on/off and charge-limit nodes often DON'T cut, but forcing the current to 0 DOES.
+# On value = a high number (the kernel clamps to its own max on restore); off value = 0.
+# Wildcards match many vendors (Qualcomm/MTK/etc: usb, main-charger, gccd, battery,
+# rt9471, tcpm-source-psy, constant_charge_current(_max), input_current(_limit) ...).
+# Offered as candidates here; cycle_switches keeps whichever actually cuts the current.
+*/current_max 3000000 0
+*/constant_charge_current 5000000 0
+*/constant_charge_current_max 5000000 0
+*/input_current_limit 3000000 0
+*/input_current 3000000 0
+
+/proc/driver/charger_limit_enable 0 1 /proc/driver/charger_limit 100 pcap
+/proc/driver/charger_limit_enable 0 1 /proc/driver/charger_limit 100 battery/capacity
+/proc/driver/charger_limit_enable 0 1 /proc/driver/charger_limit 100 5
+/proc/mtk_battery_cmd/current_cmd 0::0 0::1
+/proc/mtk_battery_cmd/current_cmd 0::0 0::1 /proc/mtk_battery_cmd/en_power_path 1 0
+/sys/class/qcom-battery/batt_protect_en 0 1
+/sys/class/qcom-battery/night_charging 0 1
+/sys/module/lge_battery/parameters/charge_stop_level 100 battery/capacity battery/input_suspend 0 0
+/sys/module/lge_battery/parameters/charge_stop_level 100 5 battery/input_suspend 0 0
+
+# experimental
+#battery/charge_control_start_threshold 0 1 battery/charge_control_end_threshold 0 2
+/sys/class/qcom-battery/cool_mode 0 1
+/sys/class/qcom-battery/wireless_boost_en 0 1
+# Google charge-limit node. ON value = 100 ("charge up"): REQUIRED to resume -- this
+# node LATCHES "stopped" once it reaches the limit, and re-writing the limit value
+# does NOT re-arm the charger (the battery would freeze below the range, e.g. stuck
+# at 64). OFF value = pcap (your pause_capacity), so charging stops AT your limit --
+# not above it (loopDelay[0]=3s keeps the stop tight) and without draining down to 5.
+# Net: charge up to your limit, stop, drift down, resume at your resume level -- a
+# tight cycle within your range. This is the 2022/2023 behavior (on=100) done cleanly.
+/sys/devices/platform/google,charger/charge_stop_level 100 pcap
+/sys/devices/platform/soc/soc:oplus,chg_intf/oplus_chg/battery/chg_enable 1 0
+/sys/devices/platform/soc/soc:oplus,chg_intf/oplus_chg/battery/chg_enable 1 0
+/sys/devices/platform/soc/soc:oplus,chg_intf/oplus_chg/battery/cool_down 0 1
+/sys/devices/platform/soc/soc:qcom,pmic_glink/soc:qcom,pmic_glink:mmi,qti-glink-charger/force_usb_suspend 0 1
+/sys/kernel/debug/google_charger/chg_mode 0 1
+/sys/kernel/fast_charge/force_fast_charge 1 0
+# rc(6.4): removed /sys/module/qpnp_adaptive_charge/parameters/blocking -- it is a READ-ONLY
+# status node (kernel set handler returns -EINVAL), so 0/1 writes are no-ops: a dead switch.
+#/sys/module/qpnp_fg/parameters/batt_range_pct 0 1
+#/sys/module/qpnp_smbcharger/parameters/dynamic_icl_wipower_en 0 1
+#battery/charge_control_limit 0 1
+#bbc/hiz_mode 0 1
+#bms/ignore_false_negative_isense 1 0
+#bms/update_now 0 1
+#CROS_USB_PD_CHARGER0/charge_control_limit_max 0 1
+#usb/cc_toggle_enable 1 0
+#usb/otg_fastroleswap 0 1
+battery/charge_control_limit 0 battery/charge_control_limit_max
+charger/charge_control_limit 0 charger/charge_control_limit_max
+battery/hmt_ta_charge 1 0
+battery/restricted_charging 0 1
+battery/system_temp_in_level 0 battery/num_system_temp_in_levels
+battery/system_temp_level 0 battery/num_system_temp_levels
+bms/temp_cool 0 900
+main/cool_mode 0 1
+maxfg/offmode_charger 0 1
+wireless/restricted_charging 0 1
+wireless/system_temp_in_level 0 wireless/num_system_temp_in_levels
+wireless/system_temp_level 0 wireless/num_system_temp_levels
+
+# troublesome
+#/sys/devices/platform/battery_meter/FG_daemon_disable 0 1
+#/sys/power/pnpmgr/battery/charging_enabled 1 0
+#/sys/class/qcom-battery/vbus_disable 0 1
+/sys/devices/platform/battery/ChargerEnable 1 0
+battery/ChargerEnable 1 0
+#usb/vbus_disable 0 1
+
+# deprecated
+battery/op_disable_charge 0 1 battery/input_suspend 0 0
+
+# rc(6.4): OnePlus/Oppo/Realme (OPLUS) -- the /sys/class/oplus_chg/ symlink path, distinct
+# from the relative oplus_chg/ and absolute /sys/oplus/ spellings already above. Verified in
+# GPL kernel (oplus_configfs.c store() -> oplus_chg_turn_off_charging() on 0). on=1/off=0.
+# Appended at END so every existing device keeps its current switch (order = selection priority).
+/sys/class/oplus_chg/battery/mmi_charging_enable 1 0
+"
+}
+
+ls_curr_ctrl_files() {
+  echo "
+*/ac_charge
+*/ac_input
+*/aca_charge
+*/aca_input
+*/batt_tune_*_charge_current
+#*/batt_tune_chg_limit_cur
+*/car_charge
+*/car_input
+*/constant_charge_current*
+*/current_max
+*/dcp_charge
+*/hv_charge
+*/input_current*
+*/mhl_2000_charge
+*/mhl_2000_input
+*/restrict*_cur*
+*/sdp_charge
+*/sdp_input
+*/so_limit_charge
+*/so_limit_input
+*/wc_charge
+*/wc_input
+*dcp_input
+/sys/class/qcom-battery/restrict*_cur*
+"
+}
+
+ls_volt_ctrl_files() {
+  echo "
+*/batt_tune_float_voltage
+*/constant_charge_voltage*
+*/fg_full_voltage
+*/voltage_max
+/sys/d/charger/vfloat_uv
+/sys/d/smb*/vfloat_mv
+"
+}
