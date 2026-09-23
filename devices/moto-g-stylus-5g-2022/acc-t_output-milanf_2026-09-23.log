@@ -1,0 +1,854 @@
+versionCode=202505333
+
+charger/online:1
+pc_port/online:1
+usb/online:0
+
+chargingSwitch=()
+
+1/27: battery/device/force_charger_suspend 0 1
+  off (1)	26mA	Charging
+  off (1)	-378mA	Discharging
+  on (0)	-459mA	Discharging
+  on (0)	85mA	Charging
+  Switch works ✅
+  battIdleMode=false
+
+2/27: usb/device/force_charger_suspend 0 1
+  off (1)	-395mA	Discharging
+  on (0)	-436mA	Discharging
+  on (0)	91mA	Charging
+  Switch works ✅
+  battIdleMode=false
+
+3/27: battery/charge_control_limit 0 battery/charge_control_limit_max
+  off (8)	-7mA	Idle
+  on (0)	-13mA	Discharging
+  on (0)	88mA	Charging
+  Switch works ✅
+  battIdleMode=true
+
+4/27: battery/current_max 3000000 0
+  off (0)	-8mA	Idle
+  on (3000000)	-6mA	Idle
+  on (3000000)	97mA	Charging
+  Switch works ✅
+  battIdleMode=true
+
+5/27: dc/current_max 3000000 0
+  off (N/A)	99mA	Charging
+  off (N/A)	99mA	Charging
+  off (N/A)	114mA	Charging
+  off (N/A)	109mA	Charging
+  off (N/A)	116mA	Charging
+  off (N/A)	122mA	Charging
+  off (N/A)	-130mA	Discharging
+  on (N/A)	114mA	Charging
+  Switch works ✅
+  battIdleMode=false
+
+6/27: pc_port/current_max 3000000 0
+  off (N/A)	77mA	Charging
+  off (N/A)	80mA	Charging
+  off (N/A)	85mA	Charging
+  off (N/A)	81mA	Charging
+  off (N/A)	66mA	Charging
+  off (N/A)	98mA	Charging
+  off (N/A)	105mA	Charging
+  off (N/A)	121mA	Charging
+  off (N/A)	119mA	Charging
+  off (N/A)	115mA	Charging
+  off (N/A)	94mA	Charging
+  off (N/A)	98mA	Charging
+  off (N/A)	-56mA	Discharging
+  on (N/A)	41mA	Charging
+  Switch works ✅
+  battIdleMode=false
+
+7/27: usb/current_max 3000000 0
+  off (500000)	-380mA	Discharging
+  on (500000)	94mA	Charging
+  Switch works ✅
+  battIdleMode=false
+
+8/27: battery/constant_charge_current 5000000 0
+  off (N/A)	95mA	Charging
+  Switch doesn't work ❌
+
+9/27: battery/constant_charge_current_max 5000000 0
+  off (N/A)	-39mA	Discharging
+  on (N/A)	107mA	Charging
+  Switch works ✅
+  battIdleMode=false
+
+10/27: battery/input_current_limit 3000000 0
+  off (0)	24mA	Charging
+  off (0)	97mA	Charging
+  off (0)	81mA	Charging
+  off (0)	67mA	Charging
+  off (0)	86mA	Charging
+  off (0)	84mA	Charging
+  off (0)	105mA	Charging
+  off (0)	116mA	Charging
+  off (0)	124mA	Charging
+  off (0)	121mA	Charging
+  off (0)	-156mA	Discharging
+  on (1)	-469mA	Discharging
+  Switch doesn't work ❌
+  ##########
+  Waiting for charging to resume...
+  If it doesn't happen after a few seconds, try re-plugging the charger.
+  If it's taking too long, unplug the charger, stop the test with CTRL-C, run accd -i, wait a few seconds, and retest.
+  In extreme cases, one shall comment out (blacklist) this switch in /data/adb/vr25/acc-data/logs/write.log, reboot (to enable charging), and re-run the test.
+  ##########
+  - (1)	-392mA	Discharging
+  - (1)	-379mA	Discharging
+  - (1)	-384mA	Discharging
+  - (1)	-392mA	Discharging
+  - (1)	-391mA	Discharging
+  - (1)	-556mA	Discharging
+  - (1)	-351mA	Discharging
+  - (1)	-347mA	Discharging
+  - (1)	-340mA	Discharging
+  - (1)	-358mA	Discharging
+  - (1)	-360mA	Discharging
+  - (1)	-376mA	Discharging
+  - (1)	-391mA	Discharging
+  - (1)	-397mA	Discharging
+  - (1)	-407mA	Discharging
+  - (1)	-345mA	Discharging
+  - (1)	-377mA	Discharging
+  - (1)	-385mA	Discharging
+  - (1)	-374mA	Discharging
+  - (1)	-379mA	Discharging
+  - (1)	-380mA	Discharging
+  - (1)	-393mA	Discharging
+  - (1)	-380mA	Discharging
+  - (1)	-376mA	Discharging
+  - (1)	-353mA	Discharging
+  - (1)	-348mA	Discharging
+  - (1)	-360mA	Discharging
+  - (1)	-389mA	Discharging
+  - (1)	-352mA	Discharging
+  - (1)	-375mA	Discharging
+  - (1)	-397mA	Discharging
+  - (1)	-390mA	Discharging
+  - (1)	-399mA	Discharging
+  - (1)	-618mA	Discharging
+  - (1)	-383mA	Discharging
+  - (1)	-367mA	Discharging
+  - (1)	-353mA	Discharging
+  - (1)	-350mA	Discharging
+  - (1)	-349mA	Discharging
+  - (1)	-357mA	Discharging
+  - (1)	-360mA	Discharging
+  - (1)	-366mA	Discharging
+  - (1)	-373mA	Discharging
+  - (1)	-383mA	Discharging
+  - (1)	-402mA	Discharging
+  - (1)	-387mA	Discharging
+  - (1)	-375mA	Discharging
+  - (1)	-368mA	Discharging
+  - (1)	-386mA	Discharging
+  - (1)	-370mA	Discharging
+  - (1)	-339mA	Discharging
+  - (1)	-346mA	Discharging
+  - (1)	-360mA	Discharging
+  - (1)	-359mA	Discharging
+  - (1)	-382mA	Discharging
+  - (1)	-381mA	Discharging
+  - (1)	-388mA	Discharging
+  - (1)	-392mA	Discharging
+  - (1)	-381mA	Discharging
+  - (1)	-399mA	Discharging
+  - (1)	-347mA	Discharging
+  - (1)	-343mA	Discharging
+  - (1)	-340mA	Discharging
+  - (1)	-368mA	Discharging
+  - (1)	-386mA	Discharging
+  - (1)	-398mA	Discharging
+  - (1)	-380mA	Discharging
+  - (1)	-393mA	Discharging
+  - (1)	-380mA	Discharging
+  - (1)	-525mA	Discharging
+  - (1)	-360mA	Discharging
+  - (1)	-348mA	Discharging
+  - (1)	-414mA	Discharging
+  - (1)	-382mA	Discharging
+  - (1)	-373mA	Discharging
+  - (1)	-362mA	Discharging
+  - (1)	-504mA	Discharging
+  - (1)	-377mA	Discharging
+  - (1)	-397mA	Discharging
+  - (1)	-344mA	Discharging
+  - (1)	-359mA	Discharging
+  - (1)	-373mA	Discharging
+  - (1)	-433mA	Discharging
+  - (1)	-394mA	Discharging
+  - (1)	-385mA	Discharging
+  - (1)	-401mA	Discharging
+  - (1)	-365mA	Discharging
+  - (1)	-450mA	Discharging
+  - (1)	-349mA	Discharging
+  - (1)	-348mA	Discharging
+  - (1)	-356mA	Discharging
+  - (1)	-362mA	Discharging
+  - (1)	-377mA	Discharging
+  - (1)	-386mA	Discharging
+  - (1)	-391mA	Discharging
+  - (1)	-378mA	Discharging
+  - (1)	-436mA	Discharging
+  - (1)	-353mA	Discharging
+  - (1)	-344mA	Discharging
+  - (1)	-367mA	Discharging
+  - (1)	-341mA	Discharging
+  - (1)	-352mA	Discharging
+  - (1)	-447mA	Discharging
+  - (1)	-375mA	Discharging
+  - (1)	-380mA	Discharging
+  - (1)	-385mA	Discharging
+  - (1)	-380mA	Discharging
+  - (1)	-361mA	Discharging
+  - (1)	-352mA	Discharging
+  - (1)	-578mA	Discharging
+  - (1)	-409mA	Discharging
+  - (1)	-346mA	Discharging
+  - (1)	-372mA	Discharging
+  - (1)	-375mA	Discharging
+  - (1)	-396mA	Discharging
+  - (1)	-386mA	Discharging
+  - (1)	-384mA	Discharging
+  - (1)	-408mA	Discharging
+  - (1)	-364mA	Discharging
+  - (1)	-378mA	Discharging
+  - (1)	-420mA	Discharging
+  - (1)	-378mA	Discharging
+  - (1)	-378mA	Discharging
+  - (1)	-373mA	Discharging
+  - (1)	-356mA	Discharging
+  - (1)	-359mA	Discharging
+  - (1)	-340mA	Discharging
+  - (1)	-362mA	Discharging
+  - (1)	-362mA	Discharging
+  - (1)	-418mA	Discharging
+  - (1)	-379mA	Discharging
+  - (1)	-388mA	Discharging
+  - (1)	-382mA	Discharging
+  - (1)	-375mA	Discharging
+  - (1)	-358mA	Discharging
+  - (1)	-354mA	Discharging
+  - (1)	-350mA	Discharging
+  - (1)	-359mA	Discharging
+  - (1)	-365mA	Discharging
+  - (1)	-359mA	Discharging
+  - (1)	-374mA	Discharging
+  - (1)	-381mA	Discharging
+  - (1)	-395mA	Discharging
+  - (1)	-375mA	Discharging
+  - (1)	-392mA	Discharging
+  - (1)	-351mA	Discharging
+  - (1)	-341mA	Discharging
+  - (1)	-352mA	Discharging
+  - (1)	-394mA	Discharging
+  - (1)	-377mA	Discharging
+  - (1)	-388mA	Discharging
+  - (1)	-375mA	Discharging
+  - (1)	-621mA	Discharging
+  - (1)	-381mA	Discharging
+  - (1)	-411mA	Discharging
+  - (1)	-379mA	Discharging
+  - (1)	-379mA	Discharging
+  - (1)	-407mA	Discharging
+  - (1)	-340mA	Discharging
+  - (1)	-346mA	Discharging
+  - (1)	-370mA	Discharging
+  - (1)	-430mA	Discharging
+  - (1)	-379mA	Discharging
+  - (1)	-383mA	Discharging
+  - (1)	-403mA	Discharging
+  - (1)	-375mA	Discharging
+  - (1)	-368mA	Discharging
+  - (1)	-366mA	Discharging
+  - (1)	-347mA	Discharging
+  - (1)	-350mA	Discharging
+  - (1)	-394mA	Discharging
+  - (1)	-381mA	Discharging
+  - (1)	-380mA	Discharging
+  - (1)	-383mA	Discharging
+  - (1)	-383mA	Discharging
+  - (1)	-403mA	Discharging
+  - (1)	-353mA	Discharging
+  - (1)	-347mA	Discharging
+  - (1)	-373mA	Discharging
+  - (1)	-392mA	Discharging
+  - (1)	-366mA	Discharging
+  - (1)	-377mA	Discharging
+  - (1)	-407mA	Discharging
+  - (1)	-387mA	Discharging
+  - (1)	-383mA	Discharging
+  - (1)	-385mA	Discharging
+  - (1)	-363mA	Discharging
+  - (1)	-346mA	Discharging
+  - (1)	-370mA	Discharging
+  - (1)	-345mA	Discharging
+  - (1)	-354mA	Discharging
+  - (1)	-618mA	Discharging
+  - (1)	-381mA	Discharging
+  - (1)	-386mA	Discharging
+  - (1)	-410mA	Discharging
+  - (1)	-381mA	Discharging
+  - (1)	-404mA	Discharging
+  - (1)	-370mA	Discharging
+  - (1)	-361mA	Discharging
+  - (1)	-370mA	Discharging
+  - (1)	-614mA	Discharging
+  - (1)	-392mA	Discharging
+  - (1)	-400mA	Discharging
+  - (1)	-387mA	Discharging
+  - (1)	-380mA	Discharging
+  - (1)	-394mA	Discharging
+  - (1)	-379mA	Discharging
+  - (1)	-353mA	Discharging
+  - (1)	-346mA	Discharging
+  - (1)	-379mA	Discharging
+  - (1)	-362mA	Discharging
+  - (1)	-384mA	Discharging
+  - (1)	-376mA	Discharging
+  - (1)	-396mA	Discharging
+  - (1)	-397mA	Discharging
+  - (1)	-374mA	Discharging
+  - (1)	-362mA	Discharging
+  - (1)	-349mA	Discharging
+  - (1)	-341mA	Discharging
+  - (1)	-349mA	Discharging
+  - (1)	-351mA	Discharging
+  - (1)	-368mA	Discharging
+  - (1)	-381mA	Discharging
+  - (1)	-404mA	Discharging
+  - (1)	-342mA	Discharging
+  - (1)	-402mA	Discharging
+  - (1)	-402mA	Discharging
+  - (1)	-399mA	Discharging
+  - (1)	-625mA	Discharging
+  - (1)	-380mA	Discharging
+  - (1)	-381mA	Discharging
+  - (1)	-392mA	Discharging
+  - (1)	-351mA	Discharging
+  - (1)	-429mA	Discharging
+  - (1)	-359mA	Discharging
+  - (1)	-359mA	Discharging
+  - (1)	-542mA	Discharging
+  - (1)	-410mA	Discharging
+  - (1)	-403mA	Discharging
+  - (1)	-385mA	Discharging
+  - (1)	-391mA	Discharging
+  - (1)	-366mA	Discharging
+  - (1)	-371mA	Discharging
+  - (1)	-377mA	Discharging
+  - (1)	-343mA	Discharging
+  - (1)	-375mA	Discharging
+  - (1)	-363mA	Discharging
+  - (1)	-378mA	Discharging
+  - (1)	-382mA	Discharging
+  - (1)	-397mA	Discharging
+  - (1)	-375mA	Discharging
+  - (1)	-359mA	Discharging
+  - (1)	-386mA	Discharging
+  - (1)	-355mA	Discharging
+  - (1)	-357mA	Discharging
+  - (1)	-371mA	Discharging
+  - (1)	-380mA	Discharging
+  - (1)	-429mA	Discharging
+  - (1)	-385mA	Discharging
+  - (1)	-590mA	Discharging
+  - (1)	-428mA	Discharging
+  - (1)	-436mA	Discharging
+  - (1)	-435mA	Discharging
+  - (1)	-340mA	Discharging
+  - (1)	-578mA	Discharging
+  - (1)	-402mA	Discharging
+  - (1)	-405mA	Discharging
+  - (1)	-380mA	Discharging
+  - (1)	-397mA	Discharging
+  - (1)	-381mA	Discharging
+  - (1)	-379mA	Discharging
+  - (1)	-472mA	Discharging
+  - (1)	-352mA	Discharging
+  - (1)	-375mA	Discharging
+  - (1)	-349mA	Discharging
+  - (1)	-360mA	Discharging
+  - (1)	-367mA	Discharging
+  - (1)	-407mA	Discharging
+  - (1)	-398mA	Discharging
+  - (1)	-387mA	Discharging
+  - (1)	-613mA	Discharging
+  - (1)	-386mA	Discharging
+  - (1)	-376mA	Discharging
+  - (1)	-348mA	Discharging
+  - (1)	-349mA	Discharging
+  - (1)	-356mA	Discharging
+  - (1)	-376mA	Discharging
+  - (1)	-373mA	Discharging
+  - (1)	-379mA	Discharging
+  - (1)	-663mA	Discharging
+  - (1)	-408mA	Discharging
+  - (1)	-372mA	Discharging
+  - (1)	-370mA	Discharging
+  - (1)	-358mA	Discharging
+  - (1)	-349mA	Discharging
+  - (1)	-347mA	Discharging
+  - (1)	-356mA	Discharging
+  - (1)	-361mA	Discharging
+  - (1)	-583mA	Discharging
+  - (1)	-397mA	Discharging
+  - (1)	-385mA	Discharging
+  - (1)	-377mA	Discharging
+  - (1)	-371mA	Discharging
+  - (1)	-368mA	Discharging
+  - (1)	-344mA	Discharging
+  - (1)	-349mA	Discharging
+  - (1)	-344mA	Discharging
+  - (1)	-367mA	Discharging
+  - (1)	-362mA	Discharging
+  - (1)	-376mA	Discharging
+  - (1)	-402mA	Discharging
+  - (1)	-385mA	Discharging
+  - (1)	-380mA	Discharging
+  - (1)	-375mA	Discharging
+  - (1)	-358mA	Discharging
+  - (1)	-404mA	Discharging
+  - (1)	-364mA	Discharging
+  - (1)	-354mA	Discharging
+  - (1)	-356mA	Discharging
+  - (1)	-368mA	Discharging
+  - (1)	-408mA	Discharging
+  - (1)	-406mA	Discharging
+  - (1)	-392mA	Discharging
+  - (1)	-379mA	Discharging
+  - (1)	-362mA	Discharging
+  - (1)	-354mA	Discharging
+  - (1)	-340mA	Discharging
+  - (1)	-343mA	Discharging
+  - (1)	-392mA	Discharging
+  - (1)	-369mA	Discharging
+  - (1)	-380mA	Discharging
+  - (1)	-395mA	Discharging
+  - (1)	-434mA	Discharging
+  - (1)	-632mA	Discharging
+  - (1)	-387mA	Discharging
+  - (1)	-353mA	Discharging
+  - (1)	-351mA	Discharging
+  - (1)	-343mA	Discharging
+  - (1)	-378mA	Discharging
+  - (1)	-369mA	Discharging
+  - (1)	-607mA	Discharging
+  - (1)	-441mA	Discharging
+  - (1)	-562mA	Discharging
+  - (1)	-406mA	Discharging
+  - (1)	-368mA	Discharging
+  - (1)	-372mA	Discharging
+  - (1)	-365mA	Discharging
+  - (1)	-343mA	Discharging
+  - (1)	-345mA	Discharging
+  - (1)	-377mA	Discharging
+  - (1)	-371mA	Discharging
+  - (1)	-397mA	Discharging
+  - (1)	-433mA	Discharging
+  - (1)	-408mA	Discharging
+  - (1)	-423mA	Discharging
+  - (1)	15mA	Charging
+
+11/27: charger/input_current_limit 3000000 0
+  off (100000)	9mA	Idle
+  on (3000000)	-8mA	Idle
+  on (3000000)	863mA	Charging
+  Switch works ✅
+  battIdleMode=true
+
+12/27: dc/input_current_limit 3000000 0
+  off (N/A)	853mA	Charging
+  off (N/A)	848mA	Charging
+  off (N/A)	839mA	Charging
+  off (N/A)	831mA	Charging
+  off (N/A)	823mA	Charging
+  off (N/A)	814mA	Charging
+  off (N/A)	810mA	Charging
+  off (N/A)	803mA	Charging
+  off (N/A)	798mA	Charging
+  off (N/A)	793mA	Charging
+  off (N/A)	788mA	Charging
+  off (N/A)	785mA	Charging
+  off (N/A)	774mA	Charging
+  off (N/A)	770mA	Charging
+  off (N/A)	767mA	Charging
+  off (N/A)	763mA	Charging
+  off (N/A)	759mA	Charging
+  off (N/A)	759mA	Charging
+  off (N/A)	749mA	Charging
+  off (N/A)	746mA	Charging
+  off (N/A)	742mA	Charging
+  off (N/A)	742mA	Charging
+  off (N/A)	737mA	Charging
+  off (N/A)	736mA	Charging
+  off (N/A)	731mA	Charging
+  off (N/A)	726mA	Charging
+  off (N/A)	724mA	Charging
+  off (N/A)	719mA	Charging
+  off (N/A)	718mA	Charging
+  off (N/A)	716mA	Charging
+  off (N/A)	714mA	Charging
+  off (N/A)	711mA	Charging
+  off (N/A)	707mA	Charging
+  off (N/A)	707mA	Charging
+  off (N/A)	702mA	Charging
+  Switch doesn't work ❌
+
+13/27: usb/input_current_limit 3000000 0
+  off (0)	699mA	Charging
+  off (0)	697mA	Charging
+  off (0)	693mA	Charging
+  off (0)	694mA	Charging
+  off (0)	691mA	Charging
+  off (0)	691mA	Charging
+  off (0)	688mA	Charging
+  off (0)	687mA	Charging
+  off (0)	684mA	Charging
+  off (0)	684mA	Charging
+  off (0)	680mA	Charging
+  off (0)	680mA	Charging
+  off (0)	678mA	Charging
+  off (0)	676mA	Charging
+  off (0)	674mA	Charging
+  off (0)	671mA	Charging
+  off (0)	670mA	Charging
+  off (0)	667mA	Charging
+  off (0)	668mA	Charging
+  off (0)	667mA	Charging
+  off (0)	666mA	Charging
+  off (0)	664mA	Charging
+  off (0)	661mA	Charging
+  off (0)	660mA	Charging
+  off (0)	660mA	Charging
+  off (0)	661mA	Charging
+  off (0)	658mA	Charging
+  off (0)	655mA	Charging
+  off (0)	654mA	Charging
+  off (0)	654mA	Charging
+  off (0)	651mA	Charging
+  off (0)	651mA	Charging
+  off (0)	651mA	Charging
+  off (0)	649mA	Charging
+  off (0)	647mA	Charging
+  Switch doesn't work ❌
+
+14/27: battery/constant_charge_current 3000000 0
+  off (N/A)	647mA	Charging
+  off (N/A)	645mA	Charging
+  off (N/A)	644mA	Charging
+  off (N/A)	643mA	Charging
+  off (N/A)	643mA	Charging
+  off (N/A)	639mA	Charging
+  off (N/A)	638mA	Charging
+  off (N/A)	639mA	Charging
+  off (N/A)	639mA	Charging
+  off (N/A)	636mA	Charging
+  off (N/A)	637mA	Charging
+  off (N/A)	635mA	Charging
+  off (N/A)	632mA	Charging
+  off (N/A)	632mA	Charging
+  off (N/A)	633mA	Charging
+  off (N/A)	630mA	Charging
+  off (N/A)	631mA	Charging
+  off (N/A)	630mA	Charging
+  off (N/A)	628mA	Charging
+  off (N/A)	628mA	Charging
+  off (N/A)	625mA	Charging
+  off (N/A)	624mA	Charging
+  off (N/A)	624mA	Charging
+  off (N/A)	624mA	Charging
+  off (N/A)	623mA	Charging
+  off (N/A)	621mA	Charging
+  off (N/A)	620mA	Charging
+  off (N/A)	619mA	Charging
+  off (N/A)	617mA	Charging
+  off (N/A)	619mA	Charging
+  off (N/A)	619mA	Charging
+  off (N/A)	618mA	Charging
+  off (N/A)	616mA	Charging
+  off (N/A)	614mA	Charging
+  off (N/A)	612mA	Charging
+  Switch doesn't work ❌
+
+15/27: battery/constant_charge_current_max 3000000 0
+  off (N/A)	614mA	Charging
+  off (N/A)	613mA	Charging
+  off (N/A)	611mA	Charging
+  off (N/A)	610mA	Charging
+  off (N/A)	612mA	Charging
+  off (N/A)	610mA	Charging
+  off (N/A)	608mA	Charging
+  off (N/A)	609mA	Charging
+  off (N/A)	608mA	Charging
+  off (N/A)	605mA	Charging
+  off (N/A)	605mA	Charging
+  off (N/A)	606mA	Charging
+  off (N/A)	605mA	Charging
+  off (N/A)	604mA	Charging
+  off (N/A)	604mA	Charging
+  off (N/A)	603mA	Charging
+  off (N/A)	601mA	Charging
+  off (N/A)	600mA	Charging
+  off (N/A)	601mA	Charging
+  off (N/A)	600mA	Charging
+  off (N/A)	599mA	Charging
+  off (N/A)	597mA	Charging
+  off (N/A)	597mA	Charging
+  off (N/A)	595mA	Charging
+  off (N/A)	595mA	Charging
+  off (N/A)	595mA	Charging
+  off (N/A)	594mA	Charging
+  off (N/A)	595mA	Charging
+  off (N/A)	593mA	Charging
+  off (N/A)	596mA	Charging
+  off (N/A)	592mA	Charging
+  off (N/A)	591mA	Charging
+  off (N/A)	592mA	Charging
+  off (N/A)	590mA	Charging
+  off (N/A)	589mA	Charging
+  Switch doesn't work ❌
+
+16/27: charger/input_current_limit 500000 0
+  off (100000)	28mA	Charging
+  Switch doesn't work ❌
+
+17/27: pc_port/current_max 500000 0
+  off (N/A)	438mA	Charging
+  off (N/A)	437mA	Charging
+  off (N/A)	436mA	Charging
+  off (N/A)	438mA	Charging
+  off (N/A)	448mA	Charging
+  off (N/A)	454mA	Charging
+  off (N/A)	472mA	Charging
+  off (N/A)	474mA	Charging
+  off (N/A)	225mA	Charging
+  off (N/A)	449mA	Charging
+  off (N/A)	429mA	Charging
+  off (N/A)	435mA	Charging
+  off (N/A)	436mA	Charging
+  off (N/A)	432mA	Charging
+  off (N/A)	445mA	Charging
+  off (N/A)	148mA	Charging
+  off (N/A)	471mA	Charging
+  off (N/A)	473mA	Charging
+  off (N/A)	465mA	Charging
+  off (N/A)	450mA	Charging
+  off (N/A)	423mA	Charging
+  off (N/A)	434mA	Charging
+  off (N/A)	430mA	Charging
+  off (N/A)	432mA	Charging
+  off (N/A)	438mA	Charging
+  off (N/A)	434mA	Charging
+  off (N/A)	471mA	Charging
+  off (N/A)	457mA	Charging
+  off (N/A)	470mA	Charging
+  off (N/A)	461mA	Charging
+  off (N/A)	446mA	Charging
+  off (N/A)	414mA	Charging
+  off (N/A)	428mA	Charging
+  off (N/A)	427mA	Charging
+  off (N/A)	426mA	Charging
+  Switch doesn't work ❌
+
+18/27: usb/current_max 500000 0
+  off (500000)	455mA	Charging
+  Switch doesn't work ❌
+
+19/27: usb/input_current_limit 500000 0
+  off (0)	398mA	Charging
+  off (0)	17mA	Charging
+  off (0)	0mA	Idle
+  on (500000)	-39mA	Discharging
+  on (500000)	185mA	Charging
+  Switch works ✅
+  battIdleMode=true
+
+20/27: battery/constant_charge_current 3000000 10000
+  off (N/A)	436mA	Charging
+  off (N/A)	434mA	Charging
+  off (N/A)	443mA	Charging
+  off (N/A)	454mA	Charging
+  off (N/A)	466mA	Charging
+  off (N/A)	472mA	Charging
+  off (N/A)	390mA	Charging
+  off (N/A)	454mA	Charging
+  off (N/A)	453mA	Charging
+  off (N/A)	435mA	Charging
+  off (N/A)	404mA	Charging
+  off (N/A)	421mA	Charging
+  off (N/A)	431mA	Charging
+  off (N/A)	448mA	Charging
+  off (N/A)	220mA	Charging
+  off (N/A)	416mA	Charging
+  off (N/A)	232mA	Charging
+  off (N/A)	433mA	Charging
+  off (N/A)	464mA	Charging
+  off (N/A)	434mA	Charging
+  off (N/A)	462mA	Charging
+  off (N/A)	469mA	Charging
+  off (N/A)	466mA	Charging
+  off (N/A)	456mA	Charging
+  off (N/A)	454mA	Charging
+  off (N/A)	435mA	Charging
+  off (N/A)	417mA	Charging
+  off (N/A)	419mA	Charging
+  off (N/A)	429mA	Charging
+  off (N/A)	455mA	Charging
+  off (N/A)	468mA	Charging
+  off (N/A)	462mA	Charging
+  off (N/A)	475mA	Charging
+  off (N/A)	469mA	Charging
+  off (N/A)	459mA	Charging
+  Switch doesn't work ❌
+
+21/27: battery/constant_charge_current_max 3000000 10000
+  off (N/A)	433mA	Charging
+  off (N/A)	429mA	Charging
+  off (N/A)	365mA	Charging
+  off (N/A)	425mA	Charging
+  off (N/A)	434mA	Charging
+  off (N/A)	235mA	Charging
+  off (N/A)	468mA	Charging
+  off (N/A)	452mA	Charging
+  off (N/A)	462mA	Charging
+  off (N/A)	451mA	Charging
+  off (N/A)	433mA	Charging
+  off (N/A)	473mA	Charging
+  off (N/A)	460mA	Charging
+  off (N/A)	463mA	Charging
+  off (N/A)	416mA	Charging
+  off (N/A)	440mA	Charging
+  off (N/A)	417mA	Charging
+  off (N/A)	434mA	Charging
+  off (N/A)	434mA	Charging
+  off (N/A)	441mA	Charging
+  off (N/A)	451mA	Charging
+  off (N/A)	462mA	Charging
+  off (N/A)	464mA	Charging
+  off (N/A)	412mA	Charging
+  off (N/A)	460mA	Charging
+  off (N/A)	432mA	Charging
+  off (N/A)	426mA	Charging
+  off (N/A)	436mA	Charging
+  off (N/A)	431mA	Charging
+  off (N/A)	432mA	Charging
+  off (N/A)	450mA	Charging
+  off (N/A)	470mA	Charging
+  off (N/A)	474mA	Charging
+  off (N/A)	463mA	Charging
+  off (N/A)	441mA	Charging
+  Switch doesn't work ❌
+
+22/27: battery/current_max 3000000 10000
+  off (10000)	-6mA	Idle
+  on (3000000)	-6mA	Idle
+  on (3000000)	438mA	Charging
+  Switch works ✅
+  battIdleMode=true
+
+23/27: charger/input_current_limit 500000 10000
+  off (100000)	-26mA	Discharging
+  on (500000)	-64mA	Discharging
+  on (500000)	413mA	Charging
+  Switch works ✅
+  battIdleMode=false
+
+24/27: pc_port/current_max 500000 10000
+  off (N/A)	422mA	Charging
+  off (N/A)	458mA	Charging
+  off (N/A)	464mA	Charging
+  off (N/A)	460mA	Charging
+  off (N/A)	402mA	Charging
+  off (N/A)	184mA	Charging
+  off (N/A)	442mA	Charging
+  off (N/A)	423mA	Charging
+  off (N/A)	419mA	Charging
+  off (N/A)	444mA	Charging
+  off (N/A)	445mA	Charging
+  off (N/A)	466mA	Charging
+  off (N/A)	470mA	Charging
+  off (N/A)	448mA	Charging
+  off (N/A)	223mA	Charging
+  off (N/A)	442mA	Charging
+  off (N/A)	433mA	Charging
+  off (N/A)	428mA	Charging
+  off (N/A)	427mA	Charging
+  off (N/A)	445mA	Charging
+  off (N/A)	459mA	Charging
+  off (N/A)	471mA	Charging
+  off (N/A)	475mA	Charging
+  off (N/A)	457mA	Charging
+  off (N/A)	456mA	Charging
+  off (N/A)	449mA	Charging
+  off (N/A)	429mA	Charging
+  off (N/A)	433mA	Charging
+  off (N/A)	439mA	Charging
+  off (N/A)	422mA	Charging
+  off (N/A)	443mA	Charging
+  off (N/A)	465mA	Charging
+  off (N/A)	465mA	Charging
+  off (N/A)	448mA	Charging
+  off (N/A)	454mA	Charging
+  Switch doesn't work ❌
+
+25/27: usb/current_max 500000 10000
+  off (500000)	-31mA	Discharging
+  on (500000)	-175mA	Discharging
+  on (500000)	429mA	Charging
+  Switch works ✅
+  battIdleMode=false
+
+26/27: usb/input_current_limit 500000 10000
+  off (10000)	370mA	Charging
+  off (10000)	-25mA	Discharging
+  on (500000)	-43mA	Discharging
+  on (500000)	448mA	Charging
+  Switch works ✅
+  battIdleMode=false
+
+27/27: battery/voltage_max 4450000 3600mV
+  off (N/A)	443mA	Charging
+  off (N/A)	471mA	Charging
+  off (N/A)	426mA	Charging
+  off (N/A)	451mA	Charging
+  off (N/A)	445mA	Charging
+  off (N/A)	440mA	Charging
+  off (N/A)	436mA	Charging
+  off (N/A)	426mA	Charging
+  off (N/A)	447mA	Charging
+  off (N/A)	463mA	Charging
+  off (N/A)	449mA	Charging
+  off (N/A)	446mA	Charging
+  off (N/A)	236mA	Charging
+  off (N/A)	465mA	Charging
+  off (N/A)	454mA	Charging
+  off (N/A)	442mA	Charging
+  off (N/A)	434mA	Charging
+  off (N/A)	436mA	Charging
+  off (N/A)	430mA	Charging
+  off (N/A)	367mA	Charging
+  off (N/A)	463mA	Charging
+  off (N/A)	449mA	Charging
+  off (N/A)	473mA	Charging
+  off (N/A)	474mA	Charging
+  off (N/A)	464mA	Charging
+  off (N/A)	456mA	Charging
+  off (N/A)	424mA	Charging
+  off (N/A)	436mA	Charging
+  off (N/A)	431mA	Charging
+  off (N/A)	426mA	Charging
+  off (N/A)	455mA	Charging
+  off (N/A)	464mA	Charging
+  off (N/A)	473mA	Charging
+  off (N/A)	471mA	Charging
+  off (N/A)	466mA	Charging
+  Switch doesn't work ❌
