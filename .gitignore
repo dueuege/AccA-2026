@@ -1,0 +1,12 @@
+# local tooling
+.idea/
+.vscode/
+*.iml
+.gradle/
+build/
+local.properties
+
+# signing material never goes in the repo
+*.jks
+*.keystore
+keystore.properties

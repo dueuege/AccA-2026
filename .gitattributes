@@ -1,0 +1,10 @@
+# Android shell scripts break with CRLF, so pin LF regardless of core.autocrlf.
+*.sh      text eol=lf
+*.prop    text eol=lf
+*.txt     text eol=lf
+
+# Release artifacts are stored as-is.
+dist/**   binary
+*.apk     binary
+*.tgz     binary
+*.zip     binary
