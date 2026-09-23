@@ -1,0 +1,225 @@
+package mattecarra.accapp.acc._interface
+
+import androidx.annotation.WorkerThread
+import com.topjohnwu.superuser.Shell
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import mattecarra.accapp.acc.Acc
+import mattecarra.accapp.acc.ConfigUpdateResult
+import mattecarra.accapp.acc.ConfigUpdaterEnable
+import mattecarra.accapp.models.AccConfig
+import mattecarra.accapp.models.AccState
+import mattecarra.accapp.models.BatteryInfo
+
+interface AccInterface {
+    val version: Int
+
+    suspend fun readConfig(): AccConfig
+
+    suspend fun readDefaultConfig(): AccConfig
+
+    suspend fun listVoltageSupportedControlFiles(): List<String>
+
+    suspend fun resetBatteryStats(): Boolean
+
+    suspend fun getBatteryInfo(): BatteryInfo
+
+    /**
+     * Returns the daemon's structured `acca --state` snapshot (rc9+), or null when the
+     * running ACC predates it / emits an unparseable payload — callers then fall back to
+     * the legacy `acca -i` path. Default is null so only the rc9+ handler implements it.
+     */
+    suspend fun getState(): AccState? = null
+
+    suspend fun isBatteryCharging(): Boolean
+
+    /**
+     * "Is the charger physically connected?" -- the correct gate for the live switch-test, unlike
+     * [isBatteryCharging] which is false whenever ACC is HOLDING the battery at the cap (status Idle/
+     * Discharging) with the cable still in (the user-reported "I plugged in but it still says plug in").
+     * Reads `present`/`online` (which stay 1 when an input-cut switch zeroes charging) plus dumpsys
+     * 'powered'. Default impl works on every handler.
+     */
+    suspend fun isChargerPlugged(): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val out = Shell.su(
+                "cat /sys/class/power_supply/usb/present /sys/class/power_supply/usb/online " +
+                "/sys/class/power_supply/ac/online /sys/class/power_supply/dc/online " +
+                "/sys/class/power_supply/main*/online " +
+                // Wireless was covered only by the dumpsys clause, and "Wireless powered" goes
+                // FALSE while ACC holds a cut -- so a wireless charger plus a hold satisfied
+                // neither test and the app asked the user to plug in something already attached.
+                // present stays 1 through a cut, which is exactly why usb/present is read too.
+                "/sys/class/power_supply/wireless/online /sys/class/power_supply/wireless/present " +
+                "2>/dev/null; dumpsys battery 2>/dev/null"
+            ).exec().out
+            out.any { it.trim() == "1" } ||
+            out.any { Regex("(AC|USB|Wireless|Dock) powered:\\s*true").containsMatchIn(it) }
+        } catch (ex: Exception) { false }
+    }
+
+    suspend fun isAccdRunning(): Boolean
+
+    suspend fun abcStartDaemon(): Boolean
+
+    fun getAccRestartDaemon(): String
+    suspend fun accRestartDaemon(): Boolean = withContext(Dispatchers.IO) {
+        Shell.su(getAccRestartDaemon()).exec().isSuccess
+    }
+
+    suspend fun abcStopDaemon(): Boolean
+
+    suspend fun listChargingSwitches(): List<String>
+
+    suspend fun testChargingSwitch(chargingSwitch: String? = null): Int
+
+    fun getCurrentChargingSwitch(config: String): String?
+
+    fun isAutomaticSwitchEnabled(config: String): Boolean
+
+    fun isPrioritizeBatteryIdleMode(config: String): Boolean
+
+    suspend fun setChargingLimitForOneCharge(limit: Int): Boolean
+
+    suspend fun updateAccConfig(accConfig: AccConfig, cue: ConfigUpdaterEnable): ConfigUpdateResult
+
+    /**
+     * Updates the OnBoot command configuration in ACC.
+     * @param command the command to be run after the device starts (daemon starts).
+     * @return the boolean result of the command's execution.
+     */
+    fun getUpdateAccOnBootCommand(command: String?): String
+    suspend fun updateAccOnBoot(command: String?) : Boolean = withContext(Dispatchers.IO) {
+        Shell.su(getUpdateAccOnBootCommand(command)).exec().isSuccess
+    }
+
+    /**
+     * Updates the on boot exit (boolean) configuration in ACC.
+     * @param enabled boolean: if OnBootExit should be enabled.
+     * @return the boolean result of the command's execution.
+     */
+    fun getUpdateAccOnBootExitCommand(enabled: Boolean): String
+    suspend fun updateAccOnBootExit(enabled: Boolean) : Boolean = withContext(Dispatchers.IO) {
+        // Handlers that do not support this return "" (see v202107280 and every v2020*).
+        // An empty su command exits 0, so running it would report success having written
+        // nothing. Treat unsupported as "not applicable" instead of a silent false pass.
+        val cmd = getUpdateAccOnBootExitCommand(enabled)
+        if (cmd.isBlank()) return@withContext false
+        Shell.su(cmd).exec().isSuccess
+    }
+
+    /**
+     * Updates the voltage related configuration in ACC.
+     * @param voltFile path to the voltage file on the device.
+     * @param voltMax maximum voltage the phone should charge at.
+     * @return the boolean result of the command's execution.
+     */
+    fun getUpdateAccVoltControlCommand(voltFile: String?, voltMax: Int?): String
+    suspend fun updateAccVoltControl(voltFile: String?, voltMax: Int?) : Boolean = withContext(
+        Dispatchers.IO) {
+        Shell.su(getUpdateAccVoltControlCommand(voltFile, voltMax)).exec().isSuccess
+    }
+
+    fun getUpdateAccCurrentMaxCommand(currMax: Int?): String
+    suspend fun updateAccCurrentMaxCommand(currMax: Int?) : Boolean = withContext(Dispatchers.IO) {
+        Shell.su(getUpdateAccCurrentMaxCommand(currMax)).exec().isSuccess
+    }
+
+    /**
+     * Updates the temperature related configuration in ACC.
+     * @param coolDownTemperature starts cool down phase at the specified temperature.
+     * @param temperatureMax pauses charging at the specified temperature.
+     * @param wait seconds to wait until charging is resumed.
+     * @param shutdownTemperature over-temperature cutoff: ACC shuts down at this temperature.
+     * @return the boolean result of the command's execution.
+     */
+    fun getUpdateAccTemperatureCommand(coolDownTemperature: Int, temperatureMax: Int, wait: Int, shutdownTemperature: Int): String
+    suspend fun updateAccTemperature(coolDownTemperature: Int, temperatureMax: Int, wait: Int, shutdownTemperature: Int) : Boolean = withContext(
+        Dispatchers.IO) {
+        Shell.su(getUpdateAccTemperatureCommand(coolDownTemperature, temperatureMax, wait, shutdownTemperature)).exec().isSuccess
+    }
+
+    /**
+     * Updates the capacity related settings of ACC.
+     * @param shutdown shutdown the device at the specified percentage.
+     * @param coolDown starts the cool down phase at the specified percentage.
+     * @param resume allows charging starting from the specified capacity.
+     * @param pause pauses charging at the specified capacity.
+     * @return boolean if the command was successful.
+     */
+    fun getUpdateAccCapacityCommand(shutdown: Int, coolDown: Int, resume: Int, pause: Int): String
+    suspend fun updateAccCapacity(shutdown: Int, coolDown: Int, resume: Int, pause: Int) : Boolean = withContext(
+        Dispatchers.IO) {
+        Shell.su(getUpdateAccCapacityCommand(shutdown, coolDown, resume, pause)).exec().isSuccess
+    }
+
+    /**
+     * Updates the cool down charge and pause durations.
+     * @param charge seconds to charge for during the cool down phase.
+     * @param pause seconds to pause for during the cool down phase.
+     * @return boolean if the command was successful.
+     */
+    fun getUpdateAccCoolDownCommand(charge: Int?, pause: Int?): String
+    suspend fun updateAccCoolDown(charge: Int?, pause: Int?) : Boolean = withContext(Dispatchers.IO) {
+        Shell.su(getUpdateAccCoolDownCommand(charge, pause)).exec().isSuccess
+    }
+
+    fun getUpdateResetUnpluggedCommand(resetUnplugged: Boolean): String
+    suspend fun updateResetUnplugged(resetUnplugged: Boolean): Boolean = withContext(Dispatchers.IO) {
+        Shell.su(getUpdateResetUnpluggedCommand(resetUnplugged)).exec().isSuccess
+    }
+
+    fun getUpdateResetOnPauseCommand(resetOnPause: Boolean): String
+    suspend fun updateResetOnPause(resetOnPause: Boolean): Boolean = withContext(Dispatchers.IO) {
+        Shell.su(getUpdateResetOnPauseCommand(resetOnPause)).exec().isSuccess
+    }
+
+    fun getUpdateAccChargingSwitchCommand(switch: String?, automaticSwitchingEnabled: Boolean): String
+    suspend fun updateAccChargingSwitch(switch: String?, automaticSwitchingEnabled: Boolean) : Boolean = withContext(Dispatchers.IO) {
+        Shell.su(getUpdateAccChargingSwitchCommand(switch, automaticSwitchingEnabled)).exec().isSuccess
+    }
+
+    /**
+     * Updates the OnPlugged configuration in ACC.
+     * @param command the command to be run when the device is plugged in.
+     * @return the boolean result of the command's execution.
+     */
+    fun getUpdateAccOnPluggedCommand(command: String?): String
+    suspend fun updateAccOnPlugged(command: String?) : Boolean = withContext(Dispatchers.IO) {
+        Shell.su(getUpdateAccOnPluggedCommand(command)).exec().isSuccess
+    }
+
+    fun getUpgradeCommand(version: String): String
+    suspend fun upgrade(version: String): Shell.Result? = withContext(Dispatchers.IO){
+        val res = Shell.su(getUpgradeCommand(version)).exec()
+        Acc.createAccInstance()
+        res
+    }
+
+    fun getUpdatePrioritizeBatteryIdleModeCommand(enabled: Boolean): String
+    suspend fun updatePrioritizeBatteryIdleMode(enabled: Boolean): Boolean = withContext(Dispatchers.IO){
+        Shell.su(getUpdatePrioritizeBatteryIdleModeCommand(enabled)).exec().isSuccess
+    }
+
+
+    fun getAddChargingSwitchCommand(switch: String): String
+    suspend fun addChargingSwitch(switch: String): Boolean = withContext(Dispatchers.IO) {
+        Shell.su(getAddChargingSwitchCommand(switch)).exec().isSuccess
+    }
+
+    suspend fun getAccVersion(): Int? = withContext(Dispatchers.IO) {
+        // Crash-safe: a thrown libsu exception (no root, I/O error) must never propagate.
+        // split() always yields >=1 element so last()/first() cannot throw; toIntOrNull()
+        // guards the parse; on any failure fall through to null.
+        val primary = try {
+            Shell.su("/dev/.vr25/acc/acc --version").exec().out.joinToString(separator = "\n").split("(").last().split(")").first().trim().toIntOrNull()
+        } catch (e: Exception) {
+            null
+        }
+        primary ?: try {
+            Shell.su("acc --version").exec().out.joinToString(separator = "\n").split("(").last().split(")").first().trim().toIntOrNull()
+        } catch (e: Exception) {
+            null
+        }
+    }
+}

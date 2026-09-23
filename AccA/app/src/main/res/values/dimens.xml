@@ -1,0 +1,40 @@
+<resources>
+     <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="appbar_padding_top">8dp</dimen>
+
+    <dimen name="card_corner_radius">10dp</dimen>
+    <dimen name="card_content_padding">16dp</dimen>
+    <dimen name="card_content_margin">8dp</dimen>
+    <dimen name="card_margin">8dp</dimen>
+    <dimen name="card_margindiv2">4dp</dimen>
+    <dimen name="card_bottom_margin">10dp</dimen>
+
+    <dimen name="card_text_margin">5dp</dimen>
+
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Label and Value text sizes -->
+    <dimen name="label_text">16sp</dimen>
+    <dimen name="value_text">12sp</dimen>
+
+    <!-- Bottom Navigation Depths -->
+    <dimen name="bot_app_bar">8dp</dimen>
+    <dimen name="bot_fab">12dp</dimen>
+    <dimen name="bot_nav_drawer">16dp</dimen>
+
+    <dimen name="about_profile_margin">16dp</dimen>
+
+    <!--  Status card status icon  -->
+    <dimen name="acc_status_icon">84dp</dimen>
+    <dimen name="acc_status2_icon">42dp</dimen>
+
+    <dimen name="item_profile_info_two_lp">8dp</dimen>
+    <dimen name="item_profile_info_block_lp">8dp</dimen>
+    <dimen name="item_profile_info_block_rp">8dp</dimen>
+    <!-- Profile cards are a scrolling list, so vertical space is the scarce resource: every dp
+         here is paid nine times over per card (one per info row) and again per profile. Trimmed
+         from 8dp so more of the list is visible at once without touching text size or the
+         horizontal rhythm, which is what keeps it readable. -->
+    <dimen name="item_profile_info_block_tp">4dp</dimen>
+    <dimen name="item_profile_info_block_bp">4dp</dimen>
+</resources>

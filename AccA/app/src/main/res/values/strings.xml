@@ -1,0 +1,839 @@
+<resources>
+    <string name="app_name">AccA</string>
+    <string name="app_name_full">Advanced Charging Controller App</string>
+    <string name="title_activity_log_view">Diagnostics</string>
+    <string name="title_activity_log_view_file_name">Diagnostics</string>
+    <string name="log_copy">Copy</string>
+    <string name="log_share">Share</string>
+    <string name="log_refresh">Refresh</string>
+    <string name="log_gathering">Gathering diagnostics…</string>
+    <string name="log_report_subject">AccA diagnostics</string>
+    <string name="log_export_bundle">Export full log bundle</string>
+    <string name="log_export_failed">Export failed (need root / ACC running)</string>
+    <string name="log_capture">Capture charging (60s)</string>
+    <string name="log_capturing">Capturing charging activity… keep the charger plugged in</string>
+    <string name="deep_diagnostic">Report a problem</string>
+    <string name="deep_diagnostic_running">Collecting diagnostics… (observe-only, up to ~1 min)</string>
+    <string name="report_dialog_title">Report a problem</string>
+    <string name="report_dialog_message">Quick fixes almost everything — charging not stopping at your limit, wrong level, or the app misbehaving. It gathers your charge settings and logs.\n\nFull is only for a stubborn bug we ask you to capture.\n\nIt only reads your charging setup, ACC\'s own logs, and this app.</string>
+    <string name="report_quick">Quick</string>
+    <string name="report_full">Full</string>
+    <string name="report_ready_title">Report ready</string>
+    <string name="report_ready_message">Send it to us so we can debug your problem. Tap Share, then pick your messaging app or email.</string>
+    <string name="report_share">Share</string>
+    <string name="report_done">Done</string>
+    <string name="report_ready_body">Report ready. Tap Share to send it to us, or tap the report icon anytime to make a new one.</string>
+    <string name="diag_saved_downloads">Saved to Downloads — share it with the Share button or your file manager</string>
+
+    <!-- ACC Tile Strings -->
+    <string name="tile_acc_no_root">No Root</string>
+    <string name="no_root_title">Root access required</string>
+    <string name="tile_acc_enabled">Daemon running</string>
+    <string name="tile_acc_disabled">Daemon stopped</string>
+
+    <!-- Navigation Strings -->
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_profiles">Profiles</string>
+    <string name="title_scripts">Scripts</string>
+    <string name="title_schedules">Schedules</string>
+    <string name="title_settings">Settings</string>
+
+    <!-- ACC Daemon Status -->
+    <string name="title_acc">ACC</string>
+    <string name="title_acc_daemon">ACC Daemon</string>
+    <string name="acc_daemon_status_running">ACC Daemon is Running</string>
+    <string name="acc_daemon_status_not_running">ACC Daemon is Not Running</string>
+    <string name="acc_daemon_status_reading_status">Reading ACC Daemon Status...</string>
+
+    <!-- ACC Daemon Toggle -->
+    <string name="menu_stop_accd">Stop ACC Daemon</string>
+    <string name="menu_start_accd">Start ACC Daemon</string>
+
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+
+    <!-- Confirm before stopping the daemon (Dashboard) — accidental tap disables charge limit. -->
+    <string name="confirm_stop_daemon_title">Stop ACC daemon?</string>
+    <string name="confirm_stop_daemon_message">ACC will stop enforcing your charge limit until you start it again.</string>
+
+    <!-- Battery Card Strings -->
+    <string name="title_battery">Battery</string>
+    <string name="info_status">Status:</string>
+    <string name="info_charging_speed">To battery:</string>
+    <!-- The level was a progress bar only, with no figure anywhere on the card. -->
+    <string name="dash_status_with_level">%1$s &#183; %2$d%%</string>
+    <string name="dash_batt_flow">%1$s &#183; %2$s</string>
+    <string name="dash_native_limit">Firmware limit: %1$d%% &#8211; %2$d%%</string>
+    <string name="info_discharging_speed">Current Now:</string>
+    <string name="info_capacity">Capacity:</string>
+    <string name="info_temperature">Temperature:</string>
+    <string name="info_health">Health:</string>
+    <string name="info_profile">Profile:</string>
+    <!-- Shown when the daemon state report marks the charging switch as user-pinned (userLocked) -->
+    <string name="manual_lock_protected">Manual lock — protected</string>
+
+    <!-- Status string: e.g. Charging (Fast), Discharging (N/A) -->
+    <string name="info_status_extended">%1$s (%2$s)</string>
+    <string name="info_charging_speed_extended">%1$d mA at %2$.2fV</string>
+    <string name="info_discharging_speed_extended">%1$d mA</string>
+
+    <!-- Profiles Item Labels -->
+    <string name="item_profile_capacity_label">Capacity:</string>
+    <string name="item_profile_temperature_label">Temperature:</string>
+
+    <string name="status_label">Status:</string>
+    <string name="battery_info_label">Info:</string>
+
+    <string name="reset_unplugged">Reset battery stats on unplug</string>
+    <string name="reset_stats">Reset battery stats</string>
+    <string name="enable_cooldown">Enable cooldown cycle:</string>
+    <string name="cooldown_capacity" formatted="false">Start cooling down at %:</string>
+    <string name="resume_charge">Resume charging at:</string>
+    <string name="stop_charge">Stop charging at:</string>
+    <string name="enable_temp_check">Enable temperature control (°C)</string>
+    <string name="cooldown_temp">Cooldown temp:</string>
+    <string name="max_temp">Max temp:</string>
+    <string name="pause_seconds">Resume temp (&#176;C):</string>
+    <string name="shutdown_temp">Shutdown temp:</string>
+    <string name="charge_seconds">Charge seconds:</string>
+    <string name="cooldown_pause_seconds">Pause seconds:</string>
+    <string name="shutdown_capacity">Shutdown (if not charging) at:</string>
+    <string name="no_root_message">AccA needs root to control charging. Grant it in Magisk, KernelSU or APatch, then tap Retry. If you denied by mistake, clear AccA\'s denial in your root manager\'s app list and Retry.</string>
+    <string name="app_update_prerelease_note">Heads up: this is a pre-release (beta / release candidate) - newest fixes, less testing. For stable builds only, turn off \"Include pre-releases\" in Settings.</string>
+    <string name="config_error_title">Config parse error</string>
+    <string name="config_error_dialog">Failed to parse ACC config!\nPlease check whether \"su -c acc --set --print\" works.</string>
+
+    <!-- Config validation (mirrors write-config.sh so the daemon never silently coerces values to defaults) -->
+    <string name="invalid_config">Invalid configuration</string>
+    <string name="err_max_temp_range">Max temperature must be between 20 and 60 °C.</string>
+    <string name="err_cooldown_gap">Cool-down temperature must be at least 3 °C below the max temperature.</string>
+    <string name="err_resume_lt_max">Resume temperature must be below the max temperature.</string>
+    <string name="err_resume_window">Resume temperature must be within 10 °C below the max temperature.</string>
+    <string name="err_temp_order">Temperatures must be ordered: resume ≤ cool-down &lt; max.</string>
+    <string name="err_shutdown_temp_range">Shutdown temperature must be at or above the max temperature, at least 40 °C, and at most 70 °C.</string>
+    <string name="err_pause_pct">Pause capacity must be between 0 and 100%.</string>
+    <string name="err_cap_resume_lt_pause">Resume capacity must be below the pause capacity.</string>
+    <string name="err_cap_shutdown_lt_resume">Shutdown capacity must be below the resume capacity.</string>
+    <string name="err_cap_pause_mv">Pause voltage must be between 3001 and 5000 mV.</string>
+    <string name="err_cap_mv_domain">In voltage mode, shutdown, resume and pause must all be 3001–5000 mV (shutdown may be 0 to disable shutdown).</string>
+
+    <string name="wait">Please wait...\nThis will take a few seconds.</string>
+
+    <!-- Exit On Boot Card Strings -->
+    <string name="title_exit_on_boot">Stop daemon after applying settings</string>
+    <string name="description_exit_on_boot">Runs your own shell command(s) once at each boot, e.g. to write a control file. It does NOT re-apply your charge limits, ACC does that automatically. Leave empty unless you need a custom boot command.</string>
+    <string name="label_on_boot">apply_on_boot:</string>
+
+    <!-- ACC installation -->
+    <string name="installing_acc">Installing ACC</string>
+    <string name="acc_not_installed_title">ACC module not found</string>
+    <string name="acc_not_installed_message">AccA controls the ACC module but does not install it. Install ACC separately (flash the module in Magisk/KernelSU), then return and tap Retry.</string>
+    <string name="get_acc">Get ACC</string>
+    <string name="exit">Exit</string>
+    <string name="reboot">Reboot</string>
+    <string name="acc_installation_failed">Please archive and send logcat and /data/adb/acc-data/logs/ to the developers
+        at t.me/+hU1oF-BCf5hmM2Rk or github.com/seyedehsanhadi/AccA/issues/.
+    </string>
+    <string name="acc_installation_failed_title">ACC Installation Failed!</string>
+
+    <!-- DJS installation -->
+    <string name="install_djs_title">DJS is Required</string>
+    <string name="install_djs_description">For this feature to work, we must enable DJS.
+        \nDJS (Daily Job Scheduler) is a lightweight add-on for scheduling ACC profiles/settings.
+        \nDJS daemon will be started on boot alongside ACC\'s.
+    </string>
+    <string name="installing_djs">Installing DJS</string>
+    <string name="djs_installation_failed">Please archive and send logcat and /data/adb/djs-data/logs/ to the developers
+        at t.me/+hU1oF-BCf5hmM2Rk or github.com/seyedehsanhadi/AccA/issues/.
+    </string>
+    <string name="djs_installation_failed_title">DJS Installation Failed!</string>
+
+    <string name="voltage_control_file_not_set">Not set.</string>
+    <string name="edit_on_boot">Edit apply_on_boot settings</string>
+    <string name="edit_on_boot_dialog_hint">Leave blank to disable</string>
+    <string name="save">Save</string>
+
+    <string name="edit_on_boot_dialog_message">Example: /sys/kernel/fast_charge/force_fast_charge::1::0
+        --exit.\n\"--exit\" is optional; it tells the daemon to stop after applying settings.
+    </string>
+
+    <string name="logs">Logs</string>
+    <string name="text_copied_to_clipboard">Text copied to clipboard!</string>
+    <string name="log_file_not_found_title">Log file not found</string>
+    <string name="unsaved_changes">You have unsaved changes</string>
+    <string name="close_without_saving">Discard</string>
+    <string name="edit_config">Edit config</string>
+    <string name="unsaved_changes_message">Save changes?</string>
+    <string name="create_acc_profile">Create config profile</string>
+    <string name="profile_label">Profile</string>
+    <string name="profile_name">Profile name</string>
+    <string name="script_name">Script name</string>
+    <string name="dialog_profile_name_message">Enter the name you want assigned to this profile:</string>
+    <string name="dialog_script_name_message">Enter the name you want assigned to this script:</string>
+    <string name="no_profiles">No Profiles</string>
+    <string name="no_scripts">No Scripts</string>
+    <string name="profile_not_selected">Custom settings</string>
+    <string name="profile_tile_label">Profile: %1$s</string>
+    <string name="profile_update">Profile update</string>
+    <string name="profiles_text_view">Profiles (long press to edit/delete):</string>
+    <string name="restart">Restart</string>
+    <string name="invalid_chars">The profile name contains invalid characters</string>
+    <string name="recurrent_schedule">Run only once</string>
+    <string name="execution_time">Execution time</string>
+    <string name="new_config">New custom config</string>
+    <string name="new_script">New script</string>
+    <string name="enable_voltage_limit">Custom charging voltage limit</string>
+    <string name="enable_current_limit">Custom charging current limit</string>
+    <string name="voltage_control_file">Voltage control file:</string>
+    <string name="edit_power_limit">Edit current and voltage limits</string>
+    <string name="voltage_max">Max voltage (millivolts):</string>
+    <string name="disabled">Disabled</string>
+    <string name="schedule_recurrent_row_text">Recurrent Job scheduled for %1$02d:%2$02d</string>
+    <string name="schedule_execute_once_row_title">Exec. Once - %1$02d:%2$02d</string>
+    <string name="schedule_execute_once_row_text">Job scheduled for %1$02d:%2$02d</string>
+    <string name="schedule_boot_row_text">Boot job scheduled</string>
+    <string name="schedule_time">%1$02d:%2$02d</string>
+    <string name="delete">Delete</string>
+    <string name="no_schedules">No schedules set</string>
+    <string name="wrong_volt_file">Either the chosen file does not work, or your kernel doesn\'t support this feature.</string>
+    <string name="invalid_voltage_max">The value should be a number between 3700 and 4300 (millivolts)</string>
+    <string name="edit_charging_switch">Edit charging switch</string>
+    <string name="edit_charging_switch_hint">Pick the switch that limits charging on your phone. This list shows your current switch and any that \"Find my charging switch\" verified. \"Automatic\" often can\'t stop charging on its own - if the list is empty or your limit is ignored, run \"Find my charging switch\" first.</string>
+    <string name="test_switch">Test charging switch</string>
+    <string name="no_option_selected">No option selected; please select one!</string>
+    <string name="charging_switch_works">Selected charging switch works!</string>
+    <string name="charging_switch_does_not_work">Selected charging switch fails!</string>
+    <string name="plug_battery_to_test">Plug the charger and try again!</string>
+    <string name="automatic">Automatic</string>
+    <string name="automatic_dialog_label">Automatic (ACC picks a working switch each cycle)</string>
+    <string name="add_charging_switch_help">A charging switch is a kernel file ACC writes to stop or allow charging. ON is the value that allows charging, OFF is the value that stops it.\n\nExample: node /sys/class/power_supply/battery/charge_control_limit, ON 0, OFF 6.\n\nTip: \"Find my charging switch\" discovers and tests the right one for your phone automatically.</string>
+    <string name="charging_switch_node_hint">e.g. /sys/class/power_supply/battery/charge_control_limit</string>
+    <string name="charging_switch_on_value_hint">e.g. 0</string>
+    <string name="charging_switch_off_value_hint">e.g. 6</string>
+    <string name="error_occurred">An error has occurred</string>
+    <string name="retry">Retry</string>
+    <string name="edit_charging_limit_once_button">Charge once to #\%, without restrictions</string>
+    <string name="done_applied_charge_limit">Charging to %1$d%%</string>
+    <string name="charge_limit_not_applied">Apply charge limit canceled</string>
+    <string name="apply">Apply</string>
+    <string name="done">Done</string>
+    <string name="edit_charging_limit_once_dialog_msg">Your regular settings are automatically restored once the chosen battery level is reached.</string>
+    <string name="title_power_control">Charging power control</string>
+    <string name="power_limit_off_in_settings">%1$s is off in Settings</string>
+    <string name="script_blocked_custom_off">Blocked: this script is more than a plain acc command. Turn on Settings → Allow custom shell scripts to run it.</string>
+    <string name="power_control_disabled_in_settings">(off in Settings: AccVoltControl / AccCurrentMax)</string>
+    <string name="info">Info</string>
+    <string name="title_cooldown_control">Cool Down</string>
+    <string name="title_on_boot">Apply on Boot</string>
+    <string name="title_temperature_control">Temperature Control</string>
+    <string name="title_capacity_control">Capacity Control</string>
+    <string name="title_miscellaneous_control">Miscellaneous</string>
+    <string name="about">About</string>
+
+    <!-- ACC Config Tooltips -->
+    <string name="capacity_control_info">- SHUTDOWN: automatically shutdown the system at/below this battery level when battery is not charging.&lt;br /&gt;- STOP: and RESUME capacities dictate when charging should stop and resume, respectively.&lt;br /&gt;- CHARGING SWITCH is the control file, plus ON and OFF values for switching charging on/off. By default, ACC uses whatever works.</string>
+    <string name="power_control_info">- Every reduction in peak charge voltage of 0.10V/cell is said to double the cycle life.&lt;br /&gt;- Unfortunately, not all devices/kernels support this feature.</string>
+    <string name="temperature_control_info">- This disables charging for set seconds to cool the battery&lt;br /&gt;- COOLDOWN TEMP depends on COOLDOWN RATIO.&lt;br /&gt;- MAX TEMP pauses charging; it resumes at RESUME TEMP.</string>
+    <string name="cooldown_info">- Charging ON/OFF ratio in seconds (e.g., 50/10) - reduces battery stress induced by prolonged high temperature and high charging voltage by periodically pausing charging.&lt;br /&gt;- If charging is too slow, turn this off or change the ratio to something like 50/5.&lt;br /&gt;- When disabled, COOLDOWN CAPACITY and COOLDOWN TEMP values have no effect.&lt;br /&gt;- This functionality is a fair alternative to the charging voltage limit feature.</string>
+    <string name="on_plugged_info">This is used for updating control files whose contents change on certain power events (e.g., plug/unplug). It is particularly useful for enforcing custom max voltage/current for usb/wireless charging.</string>
+    <string name="battery_idle_info_label">This allows supported device to draw power directly from the external power supply when charging is paused.</string>
+    <string name="miscellaneous_info_label">Various acc configurations that did not fit in other defined categories</string>
+
+    <string name="acc_config_editor">ACC config editor</string>
+    <string name="profile_creator">Profile creator</string>
+    <string name="schedule_creator">Schedule creator</string>
+    <string name="charging_switch_label">Charging switch:</string>
+    <string name="script_label">Script name:</string>
+    <string name="script_description">Description:</string>
+    <string name="script_body_text">Shell text:</string>
+
+    <string name="title_on_plugged">Apply on Plug</string>
+    <string name="label_on_plugged">apply_on_plug:</string>
+    <string name="edit_on_plugged">Edit apply_on_plug settings:</string>
+
+    <string name="edit_on_plugged_dialog_message">Example: wireless/voltage_max::9000000 forces fast wireless charging on some Pixel devices.</string>
+
+    <!-- Shared root-warning under both apply_on_boot and apply_on_plug edit dialogs. -->
+    <string name="on_boot_plug_root_warning">Runs as root every boot / plug — only paste commands you trust.</string>
+
+    <string translatable="false" name="lang_ar">العربية</string>
+    <string translatable="false" name="lang_az">Azərbaycan</string>
+    <string translatable="false" name="lang_bg">Български</string>
+    <string translatable="false" name="lang_bs">Bosanski</string>
+    <string translatable="false" name="lang_by">Беларускі</string>
+    <string translatable="false" name="lang_ca">Català</string>
+    <string translatable="false" name="lang_cs">Česky</string>
+    <string translatable="false" name="lang_da">Dansk</string>
+    <string translatable="false" name="lang_de">Deutsch</string>
+    <string translatable="false" name="lang_default">Default as System</string>
+    <string translatable="false" name="lang_el">Default</string>
+    <string translatable="false" name="lang_es">Español</string>
+    <string translatable="false" name="lang_es_mx">Español mexicano</string>
+    <string translatable="false" name="lang_et">Eesti</string>
+    <string translatable="false" name="lang_eu">Euskara</string>
+    <string translatable="false" name="lang_en">English</string>
+    <string translatable="false" name="lang_fa">فارسی</string>
+    <string translatable="false" name="lang_fi">Suomi</string>
+    <string translatable="false" name="lang_fil">Tagalog</string>
+    <string translatable="false" name="lang_fr">Français</string>
+    <string translatable="false" name="lang_ga">Gaeilge</string>
+    <string translatable="false" name="lang_gr">Ελληνικά</string>
+    <string translatable="false" name="lang_he">עברית</string>
+    <string translatable="false" name="lang_hi">हिन्दी</string>
+    <string translatable="false" name="lang_hr">Hrvatski</string>
+    <string translatable="false" name="lang_hu">Magyar</string>
+    <string translatable="false" name="lang_in">Bahasa Indonesia</string>
+    <string translatable="false" name="lang_it">Italiano</string>
+    <string translatable="false" name="lang_ja">日本国</string>
+    <string translatable="false" name="lang_ka">ქართული</string>
+    <string translatable="false" name="lang_ko">한국어</string>
+    <string translatable="false" name="lang_lt">Lietuvių</string>
+    <string translatable="false" name="lang_lv">Latviešu</string>
+    <string translatable="false" name="lang_ms">Melayu</string>
+    <string translatable="false" name="lang_my">မြန်မာဘာသာ</string>
+    <string translatable="false" name="lang_nl">Nederlands</string>
+    <string translatable="false" name="lang_no">Norsk</string>
+    <string translatable="false" name="lang_pl">Polski</string>
+    <string translatable="false" name="lang_pt">Português</string>
+    <string translatable="false" name="lang_pt_br">Português brasileiro</string>
+    <string translatable="false" name="lang_ro">Română</string>
+    <string translatable="false" name="lang_ru">Русский</string>
+    <string translatable="false" name="lang_si">සිංහල</string>
+    <string translatable="false" name="lang_sk">Slovenčina</string>
+    <string translatable="false" name="lang_sl">Slovenščina</string>
+    <string translatable="false" name="lang_sq">Shqip</string>
+    <string translatable="false" name="lang_sr">Српски</string>
+    <string translatable="false" name="lang_sr_cs">Srpski</string>
+    <string translatable="false" name="lang_sv">Svenska</string>
+    <string translatable="false" name="lang_th">ไทย</string>
+    <string translatable="false" name="lang_tr">Türkçe</string>
+    <string translatable="false" name="lang_uk">Українська</string>
+    <string translatable="false" name="lang_uz">Ўзбек</string>
+    <string translatable="false" name="lang_vi">Tiếng Việt</string>
+    <string translatable="false" name="lang_zh">中文</string>
+    <string translatable="false" name="lang_zh_tw">文言</string>
+
+    <string name="capacity_control_disabled">Capacity control disabled</string>
+    <string name="template_capacity_profile">Shutdown: %1$d%% - Resume: %2$d%% - Stop: %3$d%%</string>
+    <string name="template_capacity_profile_mv">Shutdown: %1$d mV - Resume: %2$d mV - Stop: %3$d mV</string>
+    <string name="template_temperature_profile">Cool: %1$d&#176;C - Max: %2$d&#176;C - Resume: %3$d&#176;C</string>
+    <string name="template_cool_down_profile">Start at: %1$d%% - Charge for %2$ds - Pause for %3$ds</string>
+    <!-- ACC uses cooldown_capacity=101 to mean "never start cooling down by capacity" (a
+         percentage cannot exceed 100). Printing the sentinel as "Start at: 101%" read like a
+         setting rather than an off state. The charge/pause ratio still applies via temperature. -->
+
+    <!--Menus Options-->
+    <string name="menu_option_run">Run</string>
+    <string name="menu_option_run_silent">Run (Silent)</string>
+    <string name="menu_option_edit">Edit</string>
+    <string name="menu_option_copy">Copy</string>
+    <string name="menu_option_rename">Rename</string>
+    <string name="menu_option_delete">Delete</string>
+
+    <string name="selecting_profile_toast">Selecting profile %1$s.</string>
+    <string name="installation_failed_busybox_title">Busybox is not installed</string>
+    <string name="installation_failed_busybox">Install busybox first or simply place the binary in /data/adb/bin/</string>
+    <string name="share">Share</string>
+    <string name="logs_not_found">Log file not found.</string>
+    <string name="copy_log">Copy log</string>
+    <string name="copied_to_clipboard">Log copied to clipboard</string>
+    <string name="acc_telegram">For additional support, join ACC Telegram group (t.me/+hU1oF-BCf5hmM2Rk)!</string>
+
+    <string name="current_measure_unit_preference_title">Input Current unit of measure</string>
+    <string name="current_measure_unit_preference_description">ACC retrieves charging information from the sys interface.
+        Some systems express current in µA (microamps), others in mA (milliamps).
+        If the detected unit is incorrect, you can set it manually.
+    </string>
+
+    <string name="voltage_measure_unit_preference_title">Input Voltage unit of measure</string>
+    <string name="voltage_measure_unit_preference_title_description">ACC retrieves charging information from the sys interface.
+        Some systems express voltage in µV (microvolts), others in mV (millivolts).
+        If the detected unit is incorrect, you can set it manually.
+    </string>
+
+    <string name="units_of_measure">Units of measure</string>
+
+    <string name="current_measure_output_preference_title">Output Current unit of measure</string>
+    <string name="current_measure_output_preference_description">The output of current, 0.412 A (amp) or 412 mA (milliamper).</string>
+    <string name="voltage_measure_output_preference_title">Output Voltage unit of measure</string>
+    <string name="voltage_measure_output_preference_title_description">The output of voltage, 4.123 V (Volt) or 4123 mV (Milvolt).</string>
+    <string name="temperature_measure_output_preference_title">Output Temperature unit of measure</string>
+    <string name="temperature_measure_output_preference_title_description">The output of temperature: -1C/30F (Celsius/Fahrenheit) or -1C (Celsius) or 30F (Fahrenheit).</string>
+
+    <string name="acc_version_preference_title">ACC module</string>
+
+    <string name="acc_version_preference_description">Shows the installed ACC version and checks GitHub for a newer one. AccA never installs or overrides ACC - it points you to the download so you flash it yourself.</string>
+    <string name="acc_update_via_magisk_title">Updating ACC</string>
+    <string name="acc_update_via_magisk_summary_short">ACC is a module you flash yourself; AccA never installs or overrides it.</string>
+    <string name="acc_update_via_magisk_summary">ACC (the charging module) is a Magisk / KernelSU / APatch module you flash yourself - AccA never installs or overrides it. Tap \"ACC module\" above to check for a newer version. AccA updates itself separately.</string>
+    <string name="pref_update_notif_title">Update notifications</string>
+    <string name="pref_update_notif_summary">Get a notification when a newer ACC or AccA version is available, with the changelog. It stays until you act on it or swipe it away. On by default.</string>
+    <string name="update_notif_channel">Update notifications</string>
+    <string name="update_and"> and </string>
+    <string name="update_action_acca">Update AccA</string>
+    <string name="update_action_acc">Update ACC</string>
+    <string name="acc_module_title">ACC module</string>
+    <string name="acc_checking_update">Checking for ACC updates…</string>
+    <string name="acc_get_message">ACC (the charging module) is not installed. AccA runs without it, but needs it to actually control charging. Download the latest ACC, then flash it in Magisk / KernelSU / APatch.</string>
+    <string name="acc_installed_cant_check">ACC %1$s is installed. Couldn\'t reach GitHub to check for a newer version - try again when you\'re online.</string>
+    <string name="acc_update_available_title">ACC update available</string>
+    <string name="acc_update_available_message">You have ACC %1$s. %2$s is available. Download it and flash it in your root manager to update - AccA won\'t change your installed ACC for you.</string>
+    <string name="acc_up_to_date">ACC %1$s is installed and up to date.</string>
+    <string name="get_update">Get update</string>
+
+    <string name="install_bundled_version">Install bundled variant</string>
+
+    <string name="acc_version_picker_title">ACC version</string>
+    <string name="acc_version_picker_message">Select the desired ACC variant</string>
+
+    <string-array name="current_measure_units_options">
+        <item>Ampere</item>
+        <item>mAmpere (1E-03)</item>
+        <item>μAmpere (1E-06)</item>
+    </string-array>
+
+    <string-array name="voltage_measure_units_options">
+        <item>Voltage</item>
+        <item>mV (1E-03)</item>
+        <item>μV (1E-06)</item>
+    </string-array>
+
+    <string-array name="temperature_measure_output_options">
+        <item>Celsius/Fahrenheit (°Both)</item>
+        <item>Celsius (°C)</item>
+        <item>Fahrenheit (°F)</item>
+    </string-array>
+
+    <string-array name="current_measure_output_options">
+        <item>Ampere (A)</item>
+        <item>mAmpere (mA)</item>
+    </string-array>
+
+    <string-array name="voltage_measure_output_options">
+        <item>Voltage (V)</item>
+        <item>mVoltage (mV)</item>
+    </string-array>
+
+    <string-array name="acc_version_options">
+        <item>Bundled</item>
+    </string-array>
+
+    <string-array name="acca_debug_options">
+        <item>Disable</item>
+        <item>Output to the console</item>
+        <item>Output to file and console</item>
+    </string-array>
+
+    <string name="app_debug_title">Debugging Log</string>
+    <string name="app_debug_summary">Debugging the application. After selecting you need to restart the application</string>
+
+    <string name="ui_options">User Interface</string>
+    <string name="theme_option_setting">Theme</string>
+    <string name="theme_option_summary">Set the apps\'s theme.</string>
+    <string name="acc_version_compatibility_warning_title">ACC version compatibility</string>
+
+    <string name="acc_version_compatibility_warning_description">You have chosen an ACC variant which is not guaranteed to be compatible with the app.
+        \nMost of the time, you won\'t face incompatibilities, though.
+        \nAccA is about to download the selected version from ACC\'s GitHub repository.
+        \nProcced?
+    </string>
+
+    <string name="restore">Restore to default</string>
+    <string name="undo">Undo</string>
+    <string name="profile_apply_undone">Previous charging settings restored.</string>
+    <string name="checking_updates">Checking for update</string>
+    <string name="no_update_available">No update available</string>
+    <string name="update_completed">Update completed!</string>
+    <string name="install">Install</string>
+    <string name="share_log">Share log file</string>
+
+    <string name="acc_installation_failed_log">ACC installation failed log</string>
+    <string name="djs_installation_failed_log">DJS installation failed log</string>
+
+    <string name="select_different_version">Change ACC version</string>
+
+    <string name="installation_failed_non_bundled">The installation of different ACC variant failed.
+        \nPlease consider archiving and sharing /data/adb/acc-data/logs/ with the devs.
+    </string>
+
+    <string name="prioritize_battery_idle">Prioritize battery idle mode</string>
+    <string name="schedule_profile_edit_current">Edit current config</string>
+    <string name="schedule_profile_keep_current">Keep current config</string>
+    <string name="schedule_type">Schedule type</string>
+    <string name="schedule_name">Schedule name</string>
+
+    <string name="experimental_pref_title">Experimental Tools</string>
+    <string name="experimental_pref_summary">Here you can disable the sending commands to the ACC service, which after execution, give freezing\\failure\\restarting the device. Some devices on MediaTek.</string>
+
+    <string name="cue_AccCurrentMax_pref_title">AccCurrentMax</string>
+    <string name="cue_AccCurrentMax_pref_summary">Enable send \"acca —set —current\" command</string>
+    <string name="cue_AccVoltControl_pref_title">AccVoltControl</string>
+    <string name="cue_AccVoltControl_pref_summary">Enable send \"acca -set —voltage\" command</string>
+
+    <string name="allow_custom_scripts_pref_title">Allow custom shell scripts</string>
+    <string name="allow_custom_scripts_pref_summary">When off, you can run, copy and rename existing scripts but can\'t add new ones or edit their commands. Turn on to write your own (a script body runs arbitrary root commands).</string>
+
+    <string-array name="theme_option_options">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>System default</item>
+    </string-array>
+
+    <string name="lang_pref_title">Language</string>
+    <string name="lang_pref_summary">Select the application language. After selecting you need to restart the application</string>
+
+    <string name="menu_import_export">Import &amp; Export</string>
+    <string name="execute_on_boot_schedule">Execute on boot</string>
+    <string name="edit_schedule">Edit schedule</string>
+    <string name="create_schedule">Create schedule</string>
+
+    <!-- About Activity -->
+    <string name="about_team_title">Meet the Team</string>
+    <string name="about_team_blurb">Thank you for using AccA!
+        \n\nWe spent heaps of time on this so that you can manage ACC with ease!
+        \n\nSpecial thanks to those who have contributed in one way or another to ACC &amp; AccA projects!
+    </string>
+
+    <string name="about_role_hadi">Fork maintainer - AMPS engine, AccA 2.0</string>
+    <string name="app_update_title">Update available</string>
+    <string name="app_update_message">AccA %1$s is available on GitHub (you have %2$s). Update to get the latest fixes.</string>
+    <string name="app_update_get">Get update</string>
+    <string name="update_whats_new">What\'s new:</string>
+    <string name="updates_pref_category">Updates</string>
+    <string name="include_pre_releases_title">Include pre-releases</string>
+    <string name="include_pre_releases_summary">Also notify me about beta and release-candidate builds. Off keeps you on stable releases only.</string>
+    <string name="djs_ksu_warning_title">KernelSU / APatch detected</string>
+    <string name="djs_ksu_warning_message">DJS boot support is experimental on KernelSU and APatch. A boot watchdog is built in: if the next boot does not complete, DJS disables itself so the phone recovers on the following boot. If internal storage ever goes missing after enabling DJS, reboot once and share the log from /data/adb/vr25/djs-data/logs.</string>
+    <string name="djs_ksu_warning_continue">Install anyway</string>
+    <string name="status_draining_to">Draining to %1$d%%</string>
+    <string name="status_bypass">Bypass</string>
+    <string name="status_standby">Standby</string>
+    <string name="status_draining">Draining</string>
+    <string name="status_idle">Idle</string>
+    <string name="status_discharging">Discharging</string>
+    <string name="status_hint">Charging = battery filling. Idle = plugged in, battery resting (held/full). Bypass = plugged in, phone runs on the charger. Standby = unplugged. Draining = battery going down. The number next to it is the real rate.</string>
+    <string name="about_attributes">Attributes</string>
+    <string name="about_attrib_telegram_icon">Telegram icon made by Pixel perfect from www.flaticon.com</string>
+
+    <string name="about_acca_version_label">ACCA Version:</string>
+    <string name="about_acc_daemon_version_label">ACC Daemon Version:</string>
+    <string name="about_acc_api_version_label">ACCA⇄ACC API Version:</string>
+    <string name="about_project_github">AccA GitHub</string>
+    <string name="about_project_telegram">AccA Telegram</string>
+    <string name="about_buy_me_coffee">Buy me a coffee</string>
+    <string name="about_kofi">Support me on Ko-fi</string>
+    <string name="about_github">GitHub</string>
+    <string name="about_website">Website</string>
+    <string name="toast_no_browser_installed">Unable to open link!\nMake sure you have a web browser installed.</string>
+    <string name="install_update_dialog">Install ACC update</string>
+    <string name="check_update_dialog_message">
+        Do yo want to install the latest version of ACC from branch \'%1$s\'?
+        \nAccA will download the latest version of ACC from GitHub based on the latest commit of the selected branch.
+        \nDo you want to continue?</string>
+    <string name="add_charging_switch">Add Charging Switch</string>
+    <string name="add_charging_switch_warning">Be careful what you add here. A wrong switch can stop your phone charging or fail to limit it. Only add a node you know works - it is live-tested before saving, so plug the charger in first. Prefer \"Find my switch\" to detect the right one automatically.</string>
+    <string name="charging_switch_on_value_label">Charging switch ON VALUE</string>
+    <string name="charging_switch_off_value_label">Charging switch OFF VALUE</string>
+    <!-- Add-Switch needs a live test, which only runs while charging — block save when unplugged. -->
+    <string name="err_add_switch_needs_plug">Plug in the charger to add a switch — it must be live-tested first.</string>
+    <string name="reset_bs_on_pause">Reset battery stats on pause \%</string>
+    <string name="current_max">Max current (mA):</string>
+    <string name="invalid_current_max">Invalid Max Current Value</string>
+    <string name="current_max_input_note">This caps the charger INPUT current. On a fast (9V) charger the battery receives more than this value (about 1.8x, because the charger steps 9V down to ~4V); on a 5V charger it is about equal. To target a battery current on a fast charger, set about 0.55x of it (e.g. set 550 for ~1000 mA into the battery). Plug in while charging to see your charger measured live.</string>
+    <string name="current_max_input_measured">%1$s detected (%2$s V in). Your battery gets about %3$sx your setting: %4$d mA in now means ~%5$d mA into the battery. Set about %6$d to put 1000 mA into the battery.</string>
+    <!-- Charge-speed line (physics only: watts = input V x A). e.g. "Fast charge: 19 W (9V fast charger)" -->
+    <string name="charge_class_slow">Slow charge</string>
+    <string name="charge_class_standard">Standard charge</string>
+    <string name="charge_class_fast">Fast charge</string>
+    <string name="charge_class_superfast">Super fast charge</string>
+    <string name="charge_class_hyper">Hyper charge</string>
+    <!-- Charger side, stated as such. The card also shows a battery-side wattage, and the two
+         differ by conversion loss; leaving both unlabelled read as a contradiction. The old
+         "(x1.0 to battery)" ratio was a 0.84-scaled voltage quotient no user could act on. -->
+    <string name="dash_charge_fmt">From charger: %1$s &#183; %2$s A &#183; %3$d W &#183; %4$s</string>
+    <string name="dash_charge_fmt_approx">From charger: ~%2$d W or more (%1$s, approximate)</string>
+    <!-- ACC is holding the input: the charger is running the phone, none of it reaching the
+         battery. Measured watts, deliberately no speed class - nothing is filling. -->
+    <string name="dash_charge_fmt_held">From charger: %1$s &#183; %2$s A &#183; %3$d W to battery</string>
+    <!-- Status-bar charge meter (rc15) -->
+    <string name="charge_meter_channel">Charging current meter</string>
+    <string name="charge_meter_charging">Charging</string>
+    <string name="charge_meter_on_battery">On battery</string>
+    <string name="pref_charge_meter_title">Show charging current in status bar</string>
+    <string name="pref_charge_meter_summary">A live meter in the status bar, charging or on battery. Read-only.</string>
+    <string name="pref_charge_meter_style_title">Meter style</string>
+    <string name="pref_charge_meter_display_title">Status bar shows</string>
+    <string name="pref_battery_source_category">Battery level</string>
+    <string name="pref_charge_meter_battery_source_title">Battery percentage source</string>
+    <string name="pref_charge_meter_battery_source_summary">Which battery reading the whole app shows - the dashboard, the status-bar meter and the notification all follow this. ACC reads the kernel directly, so it is always the true percentage and cannot be thrown off if something freezes Android\'s battery state. System follows the rest of the phone instead, which means it shows your Capacity Mask value if you set one. With no mask set the two are the same number.</string>
+    <string name="pref_charge_meter_show_temp_title">Show battery temperature</string>
+    <string name="pref_charge_meter_show_temp_summary">Adds the battery temperature next to the status-bar number and in the detailed line. Shown in °C or °F per the Temperature output unit below, under Units of measure.</string>
+    <string name="pref_charging_category">Charging</string>
+    <string name="charge_meter_stop_action">Stop</string>
+    <!-- manual AccA-only update browser; ACC surfaces its own update via Magisk/KernelSU -->
+    <string name="pref_check_updates_title">Check for updates</string>
+    <string name="pref_check_updates_summary">List every AccA release on GitHub; tap one to download it</string>
+    <string name="check_updates_checking">Checking for updates…</string>
+    <string name="check_updates_title">AccA releases</string>
+    <string name="check_updates_none">Could not reach GitHub. Check your connection and try again.</string>
+    <!-- detailed-notification lines -->
+    <string name="charge_meter_battery_line">Battery %1$d%% · %2$s V · %3$s</string>
+    <string name="charge_meter_holds_line">Holds at %1$d%%</string>
+    <string name="charge_reason_user_limit">your Max current cap is applied</string>
+    <string name="charge_reason_thermal">slowed by heat</string>
+    <string name="charge_reason_taper">topping off, near full</string>
+    <string name="charger_tier_5v">5V standard charger</string>
+    <string name="charger_tier_9v">9V fast charger</string>
+    <string name="charger_tier_12v">12V fast charger</string>
+    <string name="charger_tier_15v">15V fast charger</string>
+    <string name="charger_tier_20v">20V fast charger</string>
+
+    <!-- Import and Export -->
+    <string name="import_title">Import</string>
+    <string name="import_load_from_clipboard">Nothing loaded yet. Tap the folder icon for your saved exports, or the clipboard icon.</string>
+    <string name="export_title">Export</string>
+    <string name="export_none_selected">Please select profiles to export above</string>
+    <string name="menu_import">Import</string>
+    <string name="menu_export">Export</string>
+    <string name="menu_title_load_clipboard">Load from Clipboard</string>
+    <string name="menu_title_clear_entries">Clear this list (nothing saved is deleted)</string>
+    <string name="import_toast_no_valid_profile_json_clipboard">Valid ACCA Profile JSON not in Clipboard</string>
+    <string name="import_toast_no_selected_profiles">Please select Profiles to Import</string>
+    <string name="import_profile_success">Successfully imported %d profiles</string>
+
+    <!-- Scripts: export/import, expand/collapse, reorder -->
+    <string name="export_scripts_title">Export scripts</string>
+    <string name="export_profiles_title">Export profiles</string>
+    <string name="import_scripts_title">Import scripts</string>
+    <string name="export_no_scripts">There are no scripts to export</string>
+    <string name="import_toast_no_valid_script_json_clipboard">Valid AccA script JSON not in clipboard</string>
+    <string name="import_toast_no_selected_scripts">Please select scripts to import</string>
+    <string name="import_script_success">Successfully imported %d scripts</string>
+    <string name="script_run">Run script</string>
+    <string name="script_expand">Show the whole script</string>
+    <string name="script_collapse">Show less</string>
+    <string name="menu_option_move_up">Move up</string>
+    <string name="menu_option_move_down">Move down</string>
+
+    <!-- Config Parse Error -->
+    <string name="parse_failed_title">Failed to Parse ACC Config</string>
+    <string name="parse_failed_body">You may try to load the default configuration by pressing \'Load Default\'. Please note that AccA will not be functional.
+        \n\nIf the error persists, please share the stack trace below along with ACC &amp; AccA version (via the 3-dot menu &gt; About) with the developers via Telegram.\n\n%s</string>
+    <string name="automatic_switch_eanbled">Automatically cycle through switches</string>
+
+    <string name="info_voltage">Voltage</string>
+    <string name="profile_option_edit">Edit</string>
+    <string name="profile_option_rename">Rename</string>
+    <string name="profile_option_delete">Delete</string>
+
+    <!-- Widget Label and Activity -->
+    <string name="qwa_dis_opt_battery">Disable battery optimization</string>
+    <string name="battery_optimization_fail">Fail to open battery optimization setting</string>
+    <string name="qwa_open_acc">Open ACCA</string>
+    <string name="qwa_stop">Stop Widgets</string>
+    <string name="qwa_start">Start Widgets</string>
+    <string name="qwa_setting">Setting Widget</string>
+    <string name="qwa_toast_sleep">Sleep mode</string>
+    <string name="qwa_toast_start">Work mode</string>
+    <string name="qwa_profile">Select profile</string>
+    <string name="qwa_exit_label">Click Outside to Exit</string>
+
+    <string name="widget_batteryInfo_name">BatteryInfo</string>
+
+    <string name="swd_title">Setting Widget</string>
+    <string name="swd_main">Main</string>
+    <string name="swd_text">Text</string>
+    <string name="swd_background">Background</string>
+    <string name="swd_show_field_names">Show field names</string>
+    <string name="swd_replace_to_symbols">Replace names symbols</string>
+    <string name="swd_show_field_values">Show units of measure</string>
+    <string name="swd_show_status">Show status</string>
+    <string name="swd_show_curr">Show current</string>
+    <string name="swd_show_temp">Show temperature</string>
+    <string name="swd_show_volt">Show Voltage</string>
+    <string name="swd_show_profile">Show profile</string>
+    <string name="acc_daemon_stuck_title">ACC daemon not responding</string>
+    <string name="acc_daemon_stuck_message">ACC is installed but its daemon did not start (the check timed out). This usually means a broken or partial install — common on KernelSU. Reboot, or reinstall ACC, then retry.</string>
+    <string name="shutdown_capacity_off_title">Auto power-off disabled</string>
+    <string name="shutdown_capacity_off_warning">With shutdown capacity set to 0, AccA will NOT power the phone off at low battery. The battery can deep-discharge and may become hard to recharge or boot — especially with a drain-type charging switch. Only disable this if you manage charging yourself.</string>
+
+    <!-- Verified-switch cockpit -->
+    <string name="verified_switch_title">Recommended charging switch</string>
+    <string name="verified_switch_for_device">Verified switch for your device: %1$s (%2$s)</string>
+    <string name="verified_switch_needs_test_caveat">Apply &amp; Lock runs a quick live test (a few seconds), then pins this switch.</string>
+    <string name="verified_switch_apply_lock">Apply &amp; Lock</string>
+    <string name="verified_switch_testing">Testing the recommended switch…</string>
+    <string name="verified_switch_applied">Verified switch applied and locked.</string>
+    <string name="verified_switch_failed_live_test">Switch failed the live test — not applied.</string>
+    <string name="verified_switch_plug_to_apply">Plug in the charger to test and apply the recommended switch.</string>
+    <!-- TASK 4: inline Apply &amp; Lock progress (spinner + status) shown in the card -->
+    <string name="verified_switch_testing_live">Testing the switch live…</string>
+    <string name="verified_switch_locked">Locked ✓</string>
+    <string name="verified_switch_level_rerun">This is a percentage cap. It can only be checked while the battery sits above the cap, so re-run \"Find my charging switch\" at a lower level (best between 40 and 80 percent) to confirm it, then Apply.</string>
+    <string name="verified_switch_pump_note">Pinned. The live test confirmed it engages, but on a charge-pump device a cap can still leak under load. Watch for slow drain at the limit, and re-run with Highest accuracy to soak-test it.</string>
+    <!-- A3: show-all-working-switches list (recommended + alternatives, tap one to lock) -->
+    <string name="verified_switch_all_title">All working switches</string>
+    <string name="verified_switch_acc_current">ACC is using now: %1$s</string>
+    <string name="verified_switch_tap_all">Tap to see all %1$d working switches and choose one to lock</string>
+    <!-- Flow-spec states: the card has a terminal LOCKED state + a distinct FAILED hint + a pump caveat -->
+    <string name="verified_switch_title_locked">Your charging switch</string>
+    <string name="verified_switch_locked_body">✓ %1$s (%2$s). Active and locked.</string>
+    <string name="verified_switch_pump_caveat">Charge-pump device: Apply &amp; Lock live-tests it, then watch for slow drain at the cap under heavy load.</string>
+    <string name="verified_switch_failed_hint">The live test did not hold, so nothing was applied. Pick another switch, or re-scan.</string>
+    <string name="verified_switch_change">Change switch</string>
+    <string name="verified_switch_rescan">Re-scan</string>
+
+    <!-- Find my charging switch (runs the bundled AMPS tester with a live log) -->
+    <string name="find_switch_title">Find my charging switch</string>
+    <string name="find_switch_apply">Apply this switch</string>
+    <string name="find_switch_cancel">Cancel</string>
+    <string name="find_switch_elapsed">%1$ds elapsed</string>
+    <string name="find_switch_found">Found: %1$s (%2$s, %3$s)</string>
+    <string name="find_switch_choose_hint">▾ Tap to choose from all %1$d working switches</string>
+    <string name="find_switch_see_all">See all %1$d switches</string>
+    <string name="find_switch_none">No reliable switch found — try a stronger charger, or see the log above.</string>
+    <string name="find_switch_device_mismatch">The saved result belongs to a different device. Run the finder on THIS phone to get a fresh recommendation.</string>
+    <string name="find_switch_apply_testing">Testing the switch live…</string>
+    <string name="find_switch_apply_locked">Locked ✓</string>
+    <string name="find_switch_extract_failed">Could not extract AMPS. Make sure root access is granted, then try again.</string>
+    <!-- Friendly status header, mapped from the tester's own section markers -->
+    <string name="find_switch_status_starting">Starting…</string>
+    <string name="find_switch_status_resetting">Resetting to native charging…</string>
+    <string name="find_switch_status_probing">Looking at your charger…</string>
+    <string name="find_switch_status_testing">Testing switches…</string>
+    <string name="find_switch_status_verifying">Verifying it holds…</string>
+    <string name="find_switch_status_weak_charger">Weak charger — results may be unreliable.</string>
+    <string name="find_switch_status_done">Done</string>
+    <string name="find_switch_status_no_switch">No reliable switch found</string>
+    <string name="find_switch_status_cancelling">Cancelling — restoring charging…</string>
+    <string name="find_switch_cancelled_restored">Scan stopped. ACC is running.</string>
+    <string name="find_switch_status_error">Could not run AMPS</string>
+    <string name="close">Close</string>
+
+    <!-- Find-switch pre-test explainer (hermetic-test contract: explain + preconditions before anything runs) -->
+    <string name="find_switch_precheck_title">Before you start</string>
+    <string name="find_switch_precheck_body" formatted="false">Briefly pauses ACC, tests the charging controls one by one, then restores everything. It only SUGGESTS a switch — nothing is locked until you tap Apply.\n\nBest at 40–80% battery, phone cool, plugged into a good charger, screen on. You can Cancel any time — charging is always restored.</string>
+    <string name="find_switch_precheck_now">Right now: battery %1$d%%.</string>
+    <string name="find_switch_precheck_temp"> Temperature about %1$d°C.</string>
+    <string name="find_switch_precheck_start">Start test</string>
+    <string name="find_switch_mode_quick">Quick scan  ·  faster (about 3–6 min)</string>
+    <string name="find_switch_mode_deep">Deep scan  ·  every switch, lists all (about 8–12 min)</string>
+    <string name="find_switch_pick_mode">Choose a scan</string>
+    <string name="find_switch_status_reconnected">Still running in the background…</string>
+    <string name="find_switch_status_precondition">Battery not ready</string>
+
+    <!-- Charging-health warning card -->
+    <string name="health_warning_title">Charging may be broken</string>
+    <string name="health_warning_message">ACC is running and the charger is plugged in, but the battery is not charging and is below your pause level. The configured charging switch may not work on this device — try the recommended switch, or test another switch in the config editor.</string>
+
+    <!-- B18: deep-discharge risk warning -->
+    <string name="drain_shutdown_zero_title">Deep-discharge risk</string>
+    <string name="drain_shutdown_zero_warning">The selected charging switch is a drain type (it discharges the battery to hold the limit) and auto power-off is disabled (shutdown = 0). Together these can deep-discharge the battery until it is hard to recharge or boot. Consider setting a shutdown capacity, or pick a non-drain switch.</string>
+
+    <!-- 1.1.7 one-shot migration: shown when the daemon's saved charging_switch is missing the
+         manual-lock marker on first launch after upgrade and AccA re-writes it. -->
+    <string name="relock_v117_done">Charging switch re-locked for safety (1.1.7).</string>
+
+
+    <string name="blocked_settings">Blocked settings</string>
+    <string name="blocked_none">Nothing is blocked.</string>
+    <string name="blocked_intro">Never written. Tap one to edit or remove it.</string>
+    <string name="blocked_remove_title">Remove from blocked list?</string>
+    <string name="blocked_remove_body">%1$s
+
+This restarted your phone before. Removing it means a future scan can test it again.</string>
+    <string name="blocked_remove_confirm">Remove</string>
+    <string name="blocked_removed">Removed from the blocked list</string>
+    <string name="blocked_remove_failed">Could not remove it. Root access is required.</string>
+    <string name="blocked_add">Block a setting</string>
+    <string name="blocked_banner_icon">⚠</string>
+    <string name="blocked_noroot">This list could not be read, because the app has no root access. It is not necessarily empty. Grant root to ACC and open this screen again.</string>
+    <string name="blocked_noroot_banner">No root access, so the blocked list cannot be read or changed.</string>
+    <string name="blocked_none_banner">Nothing blocked. Anything added here is never written.</string>
+    <string name="blocked_src_amps">crashed a scan</string>
+    <string name="blocked_src_amps_value">crashed a scan while writing %1$s</string>
+    <string name="blocked_src_amps_detail">crashed a scan while writing %1$s, %2$s</string>
+    <string name="blocked_src_acc">blocked by ACC</string>
+    <string name="blocked_selected">Selected</string>
+    <string name="blocked_select_all">Select all / none</string>
+    <string name="blocked_selected_n">%1$d selected</string>
+    <string name="blocked_remove_selected">Unblock selected</string>
+    <string name="blocked_already">(already blocked)</string>
+    <string name="blocked_add_choose">Pick one of the charge settings found on your phone, or type a path.</string>
+    <string name="blocked_add_pick">Pick from this phone</string>
+    <string name="blocked_add_type">Type a path</string>
+    <string name="blocked_pick_title">Charge settings on this phone</string>
+    <string name="blocked_pick_body">These are the charge-control settings found on your phone. Tap one to block it.</string>
+    <string name="blocked_edit_title">Edit blocked setting</string>
+    <string name="blocked_edit_body">Change the path. Example: /sys/class/power_supply/battery/input_suspend</string>
+    <string name="blocked_edited">Blocked setting updated</string>
+    <string name="blocked_remove_many">Unblock %1$d setting(s)?
+
+%2$s
+
+They can be written again. Anything that crashed your phone before can crash it again.</string>
+    <string name="blocked_add_title">Block a setting</string>
+    <string name="blocked_add_body">Nothing here will ever be written while it is on this list. Use it if you already know a setting is unsafe on your phone.</string>
+    <string name="blocked_add_hint">battery/input_suspend, or a full path</string>
+    <string name="blocked_added">Added to the blocked list</string>
+    <string name="blocked_add_failed">Could not add it. Root access is required.</string>
+    <string name="blocked_clear_all">Clear all</string>
+    <string name="blocked_clear_title">Clear the blocked list?</string>
+    <string name="blocked_clear_body">All %1$d of them become writable again. Anything that crashed your phone before can crash it again.</string>
+    <string name="blocked_clear_confirm">Clear all</string>
+    <string name="blocked_cleared">Blocked list cleared</string>
+    <plurals name="blocked_count">
+        <item quantity="one">%d blocked</item>
+        <item quantity="other">%d blocked</item>
+    </plurals>
+    <string name="ui_refresh_pref_title">State refresh interval</string>
+    <string name="ui_refresh_pref_summary_selected">Currently: %1$s</string>
+    <string name="ui_refresh_pref_summary">How often the daemon republishes the data this app shows. Longer means less battery used by ACC. Charging is never affected, and a level or status change always shows within seconds.</string>
+    <string name="ui_refresh_pref_summary_fmt">%1$s</string>
+    <string name="ui_refresh_failed">Could not apply. Is the ACC daemon running?</string>
+    <!-- No percentages. The old labels promised "about a third less CPU" at 60s and "about half"
+         at 120s, from a profile taken before the daemon's other idle costs came down. Re-measured
+         with the phone held awake so every arm is comparable, and a repeated control arm to show
+         the noise floor (0.5% on a Pixel 6a, 1.4% on a Mi A3): 120s saves 4% on the Pixel and
+         nothing measurable on the A3, and Off saves 18% and 5% respectively. One number cannot
+         describe both phones, and the old one was wrong on both. Say the direction, not a figure. -->
+    <string-array name="ui_refresh_entries">
+        <item>15s - most live, costs the most</item>
+        <item>30s - previous default</item>
+        <item>60s - recommended</item>
+        <item>120s - a little cheaper</item>
+        <item>Off - cheapest; updates when something changes</item>
+    </string-array>
+    <string-array name="ui_refresh_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+        <item>0</item>
+    </string-array>
+    <string name="menu_title_load_file">Load from file</string>
+    <string name="import_toast_file_unreadable">Could not read that file</string>
+    <string name="import_toast_no_valid_script_json_file">No valid AccA scripts in that file</string>
+    <string name="import_toast_no_valid_profile_json_file">No valid AccA profiles in that file</string>
+    <string name="import_toast_nothing_loaded">Nothing loaded yet. Use Load from file or Load from clipboard first</string>
+    <string name="profile_edited_keep_title">Profile edited</string>
+    <string name="profile_edited_keep_message">You changed settings while the profile \"%1$s\" was selected. Update that profile with the new settings, or keep it unchanged and switch to a custom setup?</string>
+    <string name="profile_edited_update">Update profile</string>
+    <string name="profile_edited_detach">Keep profile, go custom</string>
+    <string name="menu_title_select_all">Select all</string>
+    <string name="menu_title_deselect_all">Deselect all</string>
+    <string name="export_count_toast">Exporting %1$d script(s)</string>
+    <string name="menu_title_save_file">Save to file</string>
+    <string name="menu_title_copy_clipboard">Copy to clipboard</string>
+    <string name="menu_title_share">Share</string>
+    <string name="export_saved_toast">Saved %1$d item(s)</string>
+    <string name="export_copied_toast">Copied %1$d item(s) to clipboard</string>
+    <string name="export_write_failed">Could not write the export file</string>
+    <string name="menu_title_save_as">Save as…</string>
+    <string name="export_save_action">Save</string>
+    <string name="export_saved_to">Saved %1$d item(s) to %2$s</string>
+    <string name="import_load_acca_folder">Load from AccA folder</string>
+    <string name="import_pick_file_title">Files in %1$s</string>
+    <string name="import_no_files_found">No exports in %1$s yet. Use Export first, or Browse for a file from somewhere else.</string>
+    <string name="menu_title_browse_file">Browse…</string>
+</resources>

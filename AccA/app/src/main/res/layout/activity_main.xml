@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/main_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                style="?toolbarStyle"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <FrameLayout
+            android:id="@+id/main_framelayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="?attr/actionBarSize"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:background="@drawable/shadow"
+        app:layout_anchor="@+id/main_bottom_nav"
+        app:layout_anchorGravity="top"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/main_bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:menu="@menu/bottom_nav_menu"
+            app:labelVisibilityMode="labeled"
+        />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

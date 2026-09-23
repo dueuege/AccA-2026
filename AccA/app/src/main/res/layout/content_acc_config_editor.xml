@@ -1,0 +1,1065 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.AccConfigEditorActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Capacity Card -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/card_margin"
+            android:layout_marginTop="@dimen/card_margin"
+            android:layout_marginRight="@dimen/card_margin"
+            android:foreground="?selectableItemBackground"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="3dp"
+            app:contentPadding="@dimen/card_content_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/charging_control_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/capacity_control_info"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_capacity_control"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+                    <ImageView
+                        android:id="@+id/capacity_restore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="?selectableItemBackground"
+                        android:contentDescription="@string/restore"
+                        android:foregroundGravity="center"
+                        android:onClick="onCapacityRestore"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/ic_baseline_restore_24px" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/capacity_switch_enabled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    tools:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/limits"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        android:paddingTop="@dimen/card_content_margin"
+                        android:weightSum="3">
+
+                        <TextView
+                            android:id="@+id/shutdown_capacity_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:layout_marginRight="6dp"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:text="@string/shutdown_capacity"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/resume_capacity_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:layout_marginRight="6dp"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:text="@string/resume_charge"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/pause_capacity_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:layout_marginLeft="6dp"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:text="@string/stop_charge"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/num_pickers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/card_content_margin"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+
+                        <NumberPicker
+                            android:id="@+id/shutdown_capacity_picker"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="3dp"
+                            android:layout_marginRight="3dp"
+                            android:layout_weight="1"
+                            android:theme="@style/NumberPickerText" />
+
+                        <NumberPicker
+                            android:id="@+id/resume_capacity_picker"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="3dp"
+                            android:layout_marginRight="3dp"
+                            android:layout_weight="1"
+                            android:theme="@style/NumberPickerText" />
+
+                        <NumberPicker
+                            android:id="@+id/pause_capacity_picker"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_weight="1"
+                            android:theme="@style/NumberPickerText" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            android:text="@string/charging_switch_label"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/charging_switch_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="?selectableItemBackground"
+                            android:drawableEnd="@drawable/ic_outline_edit_24px"
+                            android:drawableRight="@drawable/ic_outline_edit_24px"
+                            android:gravity="center_vertical"
+                            android:onClick="editChargingSwitchOnClick"
+                            android:text="@string/automatic"
+                            android:textSize="16sp" />
+
+                        <Button
+                            android:id="@+id/find_switch_button"
+                            style="@style/Widget.AppCompat.Button.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="@dimen/card_content_padding"
+                            android:onClick="onFindSwitchClick"
+                            android:text="@string/find_switch_title"
+                            android:textColor="@color/color_surface" />
+
+                        <!-- Sits directly under Find my switch because it only exists as a
+                             consequence of scanning: a setting that crashed the phone mid-scan is
+                             put back and blocked, and this is where you see or undo that. Filled to
+                             match Find my switch: borderless made it read as decoration and people
+                             did not find it, which matters because it is where a blocked setting
+                             gets undone. -->
+                        <Button
+                            android:id="@+id/blocked_settings_button"
+                            style="@style/Widget.AppCompat.Button.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="@dimen/card_margindiv2"
+                            android:onClick="onBlockedSettingsClick"
+                            android:text="@string/blocked_settings"
+                            android:textColor="@color/color_surface" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Verified-switch cockpit Card (shown only when a verified/needs-test switch exists for this device) -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/verified_switch_card"
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/card_margin"
+            android:layout_marginTop="@dimen/card_margin"
+            android:layout_marginRight="@dimen/card_margin"
+            android:visibility="gone"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="3dp"
+            app:contentPadding="@dimen/card_content_padding"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/verified_switch_title_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/verified_switch_title"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+                <TextView
+                    android:id="@+id/verified_switch_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/card_content_margin"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="16sp"
+                    tools:text="Verified switch for your device: /sys/... 1 0 (cut)" />
+
+                <TextView
+                    android:id="@+id/verified_switch_caveat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/card_content_margin"
+                    android:text="@string/verified_switch_needs_test_caveat"
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <!-- Inline Apply & Lock progress (spinner + live status), hidden until tapped -->
+                <LinearLayout
+                    android:id="@+id/verified_switch_apply_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/card_content_margin"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <ProgressBar
+                        android:id="@+id/verified_switch_apply_spinner"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginRight="12dp" />
+
+                    <TextView
+                        android:id="@+id/verified_switch_apply_status"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="14sp"
+                        tools:text="Testing the switch live…" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/verified_switch_apply_button"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/card_content_padding"
+                    android:text="@string/verified_switch_apply_lock"
+                    android:textColor="@color/color_surface" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Voltage Control Card -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/card_margin"
+            android:layout_marginTop="@dimen/card_margin"
+            android:layout_marginRight="@dimen/card_margin"
+            android:foreground="?selectableItemBackground"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="3dp"
+            app:contentPadding="@dimen/card_content_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/power_control_info"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_power_control"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+                    <ImageView
+                        android:id="@+id/power_control_restore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="?selectableItemBackground"
+                        android:contentDescription="@string/restore"
+                        android:foregroundGravity="center"
+                        android:onClick="onPowerControlRestore"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/ic_baseline_restore_24px" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/voltcontrol_switch_enabled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/card_content_margin"
+                    tools:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/voltage_control_file_ll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/voltage_control_file_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:text="@string/voltage_control_file"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/voltage_control_file_spinner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/voltage_max_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:text="@string/voltage_max"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/voltage_max_edit_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/current_max_ll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/current_max_title"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:text="@string/current_max"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/current_max_edit_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/edit_voltage_limit"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:onClick="editPowerOnClick"
+                        android:text="@string/edit_power_limit"
+                        android:textColor="@color/color_surface" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Battery idle control Card -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/card_margin"
+            android:layout_marginTop="@dimen/card_margin"
+            android:layout_marginRight="@dimen/card_margin"
+            android:foreground="?selectableItemBackground"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="3dp"
+            app:contentPadding="@dimen/card_content_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/battery_idle_control_info"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/prioritize_battery_idle"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+                    <ImageView
+                        android:id="@+id/battery_idle_control_restore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="?selectableItemBackground"
+                        android:contentDescription="@string/restore"
+                        android:foregroundGravity="center"
+                        android:onClick="onBatteryIdleRestore"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/ic_baseline_restore_24px" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/battery_prioritize_idle_switch_enabled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Temperature Card -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/card_margin"
+            android:layout_marginTop="@dimen/card_margin"
+            android:layout_marginRight="@dimen/card_margin"
+            android:foreground="?selectableItemBackground"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="3dp"
+            app:contentPadding="@dimen/card_content_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/temp_control_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/temperature_control_info"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_temperature_control"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+                    <ImageView
+                        android:id="@+id/temperature_control_restore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="?selectableItemBackground"
+                        android:contentDescription="@string/restore"
+                        android:foregroundGravity="center"
+                        android:onClick="onTemperatureControlRestore"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/ic_baseline_restore_24px" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/temp_switch_enabled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/temps_bottom_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/card_content_padding"
+                    android:baselineAligned="false"
+                    android:orientation="vertical"
+                    tools:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/temps_labels"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <TextView
+                            android:id="@+id/cooldown_temp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:text="@string/cooldown_temp"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/pause_charging_temp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:text="@string/max_temp"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/pause_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:text="@string/pause_seconds"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/shutdown_temp_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:text="@string/shutdown_temp"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/card_content_margin"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <NumberPicker
+                            android:id="@+id/temperature_cooldown_picker"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="3dp"
+                            android:layout_marginRight="3dp"
+                            android:layout_weight="1"
+                            android:theme="@style/NumberPickerText" />
+
+                        <NumberPicker
+                            android:id="@+id/temperature_max_picker"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_weight="1"
+                            android:theme="@style/NumberPickerText" />
+
+                        <NumberPicker
+                            android:id="@+id/temperature_max_pause_seconds_picker"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_weight="1"
+                            android:theme="@style/NumberPickerText" />
+
+                        <NumberPicker
+                            android:id="@+id/temperature_shutdown_picker"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_weight="1"
+                            android:theme="@style/NumberPickerText" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Enable Cool Down Card -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/card_margin"
+            android:layout_marginTop="@dimen/card_margin"
+            android:layout_marginRight="@dimen/card_margin"
+            android:foreground="?selectableItemBackground"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="3dp"
+            app:contentPadding="@dimen/card_content_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/cooldown_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/cooldown_info"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_cooldown_control"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+
+                    <ImageView
+                        android:id="@+id/cooldown_restore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="?selectableItemBackground"
+                        android:contentDescription="@string/restore"
+                        android:foregroundGravity="center"
+                        android:onClick="onCooldownRestore"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/ic_baseline_restore_24px" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/cooldown_switch_enabled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/card_content_padding"
+                    android:orientation="vertical"
+                    tools:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/cooldown_labels"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+
+                        <TextView
+                            android:id="@+id/cooldown_percentage"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:text="@string/cooldown_capacity"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/charge_ratio"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:text="@string/charge_seconds"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/pause_ratio"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:text="@string/cooldown_pause_seconds"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/cooldown_pickers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/card_content_margin"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+
+                        <NumberPicker
+                            android:id="@+id/cooldown_percentage_picker"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="3dp"
+                            android:layout_marginRight="3dp"
+                            android:layout_weight="1"
+                            android:theme="@style/NumberPickerText" />
+
+                        <NumberPicker
+                            android:id="@+id/cooldown_charge_ratio_picker"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_weight="1"
+                            android:theme="@style/NumberPickerText" />
+
+                        <NumberPicker
+                            android:id="@+id/cooldown_pause_ratio_picker"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_weight="1"
+                            android:theme="@style/NumberPickerText" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Exit On Boot Card -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/card_margin"
+            android:layout_marginTop="@dimen/card_margin"
+            android:layout_marginRight="@dimen/card_margin"
+            android:foreground="?selectableItemBackground"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="3dp"
+            app:contentPadding="@dimen/card_content_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/exit_on_boot_info"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_on_boot"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+
+                    <ImageView
+                        android:id="@+id/apply_on_boot_restore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="?selectableItemBackground"
+                        android:contentDescription="@string/restore"
+                        android:foregroundGravity="center"
+                        android:onClick="onBootRestoreClick"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/ic_baseline_restore_24px" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/apply_on_boot_switch_enabled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    tools:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
+                        android:text="@string/label_on_boot"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_config_on_boot"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="?selectableItemBackground"
+                        android:drawableEnd="@drawable/ic_outline_edit_24px"
+                        android:drawableRight="@drawable/ic_outline_edit_24px"
+                        android:onClick="editOnBootOnClick"
+                        android:text="@string/voltage_control_file_not_set"
+                        android:textSize="16sp"
+                        app:drawableEndCompat="@drawable/ic_outline_edit_24px"
+                        app:drawableRightCompat="@drawable/ic_outline_edit_24px" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- On Plugged Card -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/card_margin"
+            android:layout_marginTop="@dimen/card_margin"
+            android:layout_marginRight="@dimen/card_margin"
+            android:foreground="?selectableItemBackground"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="3dp"
+            app:contentPadding="@dimen/card_content_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/on_plugged_info"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_on_plugged"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+
+                    <ImageView
+                        android:id="@+id/on_plugged_restore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="?selectableItemBackground"
+                        android:contentDescription="@string/restore"
+                        android:foregroundGravity="center"
+                        android:onClick="onPluggedRestore"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/ic_baseline_restore_24px" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/on_plugged_switch_enabled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    tools:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
+                        android:text="@string/label_on_plugged"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_config_on_plugged"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="?selectableItemBackground"
+                        android:drawableEnd="@drawable/ic_outline_edit_24px"
+                        android:drawableRight="@drawable/ic_outline_edit_24px"
+                        android:onClick="editOnPluggedOnClick"
+                        android:text="@string/voltage_control_file_not_set"
+                        android:textSize="16sp"
+                        app:drawableEndCompat="@drawable/ic_outline_edit_24px" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Bottom most card - include android:layout_marginBottom for proper looks -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="@dimen/card_margin"
+            android:layout_marginTop="@dimen/card_margin"
+            android:layout_marginRight="@dimen/card_margin"
+            android:layout_marginBottom="@dimen/card_bottom_margin"
+
+            android:foreground="?selectableItemBackground"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="3dp"
+            app:contentPadding="@dimen/card_content_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/misc_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_miscellaneous_control"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+
+                    <ImageView
+                        android:id="@+id/miscellaneous_restore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="?selectableItemBackground"
+                        android:contentDescription="@string/restore"
+                        android:foregroundGravity="center"
+                        android:onClick="onMiscRestore"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/ic_baseline_restore_24px" />
+
+                    <ImageView
+                        android:id="@+id/miscellaneous_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="?selectableItemBackground"
+                        android:contentDescription="@string/info"
+                        android:foregroundGravity="center"
+                        android:onClick="onInfoClick"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/ic_baseline_info" />
+                </LinearLayout>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/resetStatusUnplug_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reset_unplugged"
+                    android:textSize="16sp"
+                    android:checked="true" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/resetBSOnPause_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/reset_bs_on_pause"
+                    android:textSize="16sp"
+                    android:checked="true" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</ScrollView>

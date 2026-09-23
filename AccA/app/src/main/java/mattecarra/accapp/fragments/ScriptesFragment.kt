@@ -1,0 +1,519 @@
+package mattecarra.accapp.fragments
+
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.os.Bundle
+import android.preference.PreferenceManager
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.input.input
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.topjohnwu.superuser.Shell
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import mattecarra.accapp.R
+import mattecarra.accapp._interface.OnScriptClickListener
+import mattecarra.accapp.acc.Acc
+import mattecarra.accapp.adapters.ScriptListAdapter
+import mattecarra.accapp.databinding.*
+import mattecarra.accapp.models.AccaScript
+import mattecarra.accapp.utils.LogExt
+import mattecarra.accapp.utils.isPlainAccCommand
+import mattecarra.accapp.utils.ScopedFragment
+import mattecarra.accapp.viewmodel.ScriptsViewModel
+
+class ScriptesFragment : ScopedFragment(), OnScriptClickListener
+{
+    companion object
+    {
+        fun newInstance() = ScriptesFragment()
+    }
+
+    lateinit var mContext: Context
+    private lateinit var mScriptsViewModel: ScriptsViewModel
+    private lateinit var mScriptesAdapter: ScriptListAdapter
+    // Held so the long-running run-script dialog can be dismissed on view teardown
+    // (the script coroutine can run up to 180s; without this the dialog leaks).
+    private var mRunDialog: MaterialDialog? = null
+    // True between drag start and drop, so the LiveData observer leaves the list alone.
+    private var mIsDragging = false
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    {
+        return ScriptsFragmentBinding.inflate(inflater, container, false).root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
+        LogExt().d(javaClass.simpleName, "onViewCreated()")
+
+        val binding = ScriptsFragmentBinding.bind(view)
+
+        mContext = requireContext()
+
+        mScriptesAdapter = ScriptListAdapter(mContext)
+        mScriptesAdapter.setOnClickListener(this)
+
+        binding.scriptsRecyclerView.adapter = mScriptesAdapter
+        binding.scriptsRecyclerView.layoutManager = LinearLayoutManager(mContext)
+
+        mScriptsViewModel = ViewModelProvider(this).get(ScriptsViewModel::class.java)
+
+        // Observe data
+        mScriptsViewModel.getLiveData().observe(viewLifecycleOwner, Observer { scripts ->
+
+            // Ignore database updates while a drag is in flight. The adapter already holds the
+            // order the finger is drawing, and rebuilding the list underneath it would drop the
+            // row being moved. The write on drop re-emits, so nothing is missed.
+            if (mIsDragging) return@Observer
+
+            if (scripts.isEmpty())
+            {
+                binding.scriptsEmptyTextview.visibility = View.VISIBLE
+                binding.scriptsRecyclerView.visibility = View.GONE
+            }
+            else
+            {
+                binding.scriptsEmptyTextview.visibility = View.GONE
+                binding.scriptsRecyclerView.visibility = View.VISIBLE
+            }
+            mScriptesAdapter.setScripts(scripts)
+        })
+
+        // Gate authoring of arbitrary root shell behind the "Allow custom shell scripts"
+        // preference (off by default). When off, hide the FAB so users cannot add new
+        // scripts; the seeded acca quick-actions remain runnable, copyable and renamable.
+        val allowCustomScripts = PreferenceManager.getDefaultSharedPreferences(mContext)
+            .getBoolean("pref_allow_custom_scripts", false)
+
+        val addFab = view.findViewById<FloatingActionButton>(R.id.scripts_addBtn_fab)
+        addFab.setOnClickListener{ onAddScript() }
+        addFab.visibility = if (allowCustomScripts) View.VISIBLE else View.GONE
+
+        // UP or DOWN enables long-press drag to reorder; the swipe directions are unchanged, so
+        // swipe-to-run still behaves exactly as before.
+        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        )
+        {
+
+            private var swipeBack: Boolean = true
+            private val background = ColorDrawable()
+            // Use mContext (set from requireContext() in onViewCreated) instead of
+            // the nullable fragment `context` to avoid a null-cast NPE.
+            private val backgroundColour = ContextCompat.getColor(mContext, R.color.colorSuccessful)
+            private val applyIcon = ContextCompat.getDrawable(mContext, R.drawable.ic_outline_check_circle_24px)
+            private val intrinsicWidth = applyIcon?.intrinsicWidth ?: 0
+            private val intrinsicHeight = applyIcon?.intrinsicHeight ?: 0
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int)
+            {
+                // Required override, but not used
+            }
+
+            override fun onMove(
+                recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder
+            ): Boolean
+            {
+                mIsDragging = true
+                return mScriptesAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
+            }
+
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int)
+            {
+                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) mIsDragging = true
+                super.onSelectedChanged(viewHolder, actionState)
+            }
+
+            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder)
+            {
+                super.clearView(recyclerView, viewHolder)
+                // Drop: write the arrangement once, then let LiveData resume driving the list.
+                if (mIsDragging) {
+                    mIsDragging = false
+                    mScriptsViewModel.reorderScripts(mScriptesAdapter.currentOrder())
+                }
+            }
+
+            override fun onChildDraw(
+                c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean
+            )
+            {
+                if (actionState == ACTION_STATE_SWIPE)
+                {
+                    setTouchListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                }
+
+                // Draw background
+                val itemView = viewHolder.itemView
+                val itemHeight = itemView.bottom - itemView.top
+                background.color = backgroundColour
+
+                if (dX < 0)
+                {
+                    background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                    background.draw(c)
+
+                    // Determine icon dimensions
+                    val iconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
+                    val iconMargin = (itemHeight - intrinsicHeight) / 2
+                    val iconLeft = itemView.right - iconMargin - intrinsicWidth
+                    val iconRight = itemView.right - iconMargin
+                    val iconBottom = iconTop + intrinsicWidth
+
+                    // Draw the apply icon (skip if the drawable failed to load)
+                    applyIcon?.let { icon ->
+                        val wrapped = DrawableCompat.wrap(icon)
+                        DrawableCompat.setTint(wrapped, Color.WHITE)
+                        wrapped.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+
+                        wrapped.draw(c)
+                    }
+                }
+
+                if (dX > 0)
+                {
+
+                    background.setBounds(itemView.left, itemView.top, itemView.left + dX.toInt(), itemView.bottom)
+                    background.draw(c)
+
+                    // Determine icon dimensions
+                    val iconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
+                    val iconMargin = (itemHeight - intrinsicHeight) / 2
+                    val iconLeft = itemView.left + iconMargin
+                    val iconRight = itemView.left + iconMargin + intrinsicWidth
+                    val iconBottom = iconTop + intrinsicWidth
+
+                    // Draw the apply icon (skip if the drawable failed to load)
+                    applyIcon?.let { icon ->
+                        val wrapped = DrawableCompat.wrap(icon)
+                        DrawableCompat.setTint(wrapped, Color.WHITE)
+                        wrapped.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+
+                        wrapped.draw(c)
+                    }
+                }
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            }
+
+            @SuppressLint("ClickableViewAccessibility")
+            private fun setTouchListener(
+                canvas: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean
+            )
+            {
+
+                recyclerView.setOnTouchListener(object : View.OnTouchListener
+                {
+                    override fun onTouch(v: View?, event: MotionEvent?): Boolean
+                    {
+                        when (event?.action)
+                        {
+                            MotionEvent.ACTION_CANCEL -> swipeBack = true
+                            MotionEvent.ACTION_UP -> swipeBack = true
+                        }
+
+                        if (swipeBack)
+                        {
+                            // getScriptAt is bounds-checked (null on NO_POSITION);
+                            // only act when a real script resolves.
+                            if (dX > 300)
+                            { // If slid towards right > 300px?, adjust for sensitivity
+                                mScriptesAdapter.getScriptAt(viewHolder.adapterPosition)?.let { onScriptClick(it) }
+                            }
+                            if (dX < -300)
+                            { // Show right side
+                                mScriptesAdapter.getScriptAt(viewHolder.adapterPosition)?.let { onScriptRunSilent(it) }
+                            }
+                        }
+
+                        return false
+                    }
+                })
+            }
+
+            override fun convertToAbsoluteDirection(flags: Int, layoutDirection: Int): Int
+            {
+                if (swipeBack) { swipeBack = false ; return 0 }
+                return super.convertToAbsoluteDirection(flags, layoutDirection)
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
+        itemTouchHelper.attachToRecyclerView(binding.scriptsRecyclerView)
+    }
+
+    override fun onDestroyView()
+    {
+        // Dismiss the run-script dialog (if any) so it does not leak the gone view.
+        try { mRunDialog?.dismiss() } catch (_: Exception) {}
+        mRunDialog = null
+        super.onDestroyView()
+    }
+
+    //-----------------------------------------------------------------------------------
+
+    suspend fun runScript(script: AccaScript): AccaScript = withContext(Dispatchers.IO)
+    {
+        // "Allow custom shell scripts" (off by default) hid the add button and the edit menu, but
+        // it never gated RUNNING. Import brings scripts in from a file with no such check, so an
+        // imported body executed as root on a swipe with the preference still off. Gate the run
+        // itself -- the one place every path goes through -- and judge the BODY, not where it came
+        // from, so an edited copy of a seeded action is judged by what it would actually do.
+        val allowCustom = PreferenceManager.getDefaultSharedPreferences(mContext)
+            .getBoolean("pref_allow_custom_scripts", false)
+        if (!allowCustom && !isPlainAccCommand(script.scBody))
+        {
+            return@withContext script.copy(
+                scOutput = mContext.getString(R.string.script_blocked_custom_off),
+                scExitCode = 126)
+        }
+        // Only the switch test ("acc -t") is dangerous: it stops the charge-control
+        // daemon and can run for minutes, wedging the shared root shell so every
+        // later command (-D, -v, diagnostics) hangs until the app is force-closed.
+        // For that case only, bound it with `timeout` (via a temp file to avoid
+        // quoting issues) and restore the daemon afterwards. Every other script
+        // runs exactly as before, so normal scripts are unaffected.
+        val isTest = script.scBody.contains("-t") || script.scBody.contains("--test")
+
+        // A2: `acca`/`acc` are only on PATH via Magisk's system overlay; on KernelSU/APatch the
+        // built-in scripts fail with "acca: not found". Rewrite a leading bare command AND put the
+        // acc dir on PATH so `acc`/`acca` also resolve when they appear mid-line (e.g. a
+        // multi-command user script `sleep 2; acc -D restart`). Absolute `sh /data/adb/...` lines
+        // pass through untouched. PATH is prepended in the executed command, not exported globally.
+        // Rewrite to `acc`, the FULL front-end, not `acca`.
+        //
+        // acca is the slim front-end the daemon calls: it stubs out at()/online() and replaces
+        // daemon_ctrl, which means some commands run correctly but print NOTHING. Measured on a
+        // real device: `acc -d` prints "accd stopped / Charging disabled" while `acca -d` prints
+        // zero bytes, and `acc -D` reports the daemon while `acca -D` is silent. Both looked to a
+        // user like the script had failed. Every other command produced byte-identical output, so
+        // this only ever adds the missing lines back.
+        //
+        // The choice is made INSIDE the root shell, not here. /dev/.vr25/acc is root-only, so
+        // File.exists() from the app process always answered false and silently fell back to the
+        // very front-end this is meant to avoid. Let the shell pick, and fall back to acca for a
+        // phone on an older module that does not create the acc symlink.
+        val rewritten = when {
+            script.scBody.startsWith("acca ") -> "\$ACCBIN " + script.scBody.substring(5)
+            script.scBody.startsWith("acc ")  -> "\$ACCBIN " + script.scBody.substring(4)
+            else -> script.scBody
+        }
+        val body = "export PATH=/dev/.vr25/acc:\$PATH\n" +
+                   "ACCBIN=/dev/.vr25/acc/acc; [ -e \"\$ACCBIN\" ] || ACCBIN=/dev/.vr25/acc/acca\n" +
+                   rewritten
+
+        val sr = if (isTest) {
+            val tmp = java.io.File(mContext.cacheDir, "acca_run.sh")
+            try {
+                tmp.writeText(body)
+                Shell.su("timeout 180 sh ${tmp.absolutePath}").exec()
+            } finally {
+                try { tmp.delete() } catch (_: Exception) {}
+            }
+        } else {
+            Shell.su(body).exec()
+        }
+
+        script.scExitCode = sr.code
+        script.scOutput = sr.out.joinToString(separator = "\n")
+
+        // SAFETY: a switch test stopped the daemon. Wait past ACC's own restart
+        // window, then make sure the daemon is running again so the configured
+        // stop level keeps being enforced (charging never stays uncontrolled).
+        if (isTest) {
+            try {
+                Thread.sleep(2500)
+                if (!Acc.instance.isAccdRunning())
+                    Shell.su(Acc.instance.getAccRestartDaemon()).exec()
+            } catch (_: Exception) {}
+        }
+
+        script
+    }
+
+    override fun onScriptClick(script: AccaScript)
+    {
+        mRunDialog = MaterialDialog(mContext).show {
+            noAutoDismiss()
+            title(text = script.scName)
+            negativeButton { dismiss() }
+
+            val binding = MdRunScriptBinding.inflate(layoutInflater)
+            customView(view = binding.root, scrollable = true)
+            binding.mdRunContent.setText(script.scBody)
+            binding.mdStatusPb.visibility = View.VISIBLE
+
+            launch {
+                val sr = runScript(script)
+
+                // The fragment view may have been destroyed during the (up to 180s) run;
+                // guard the DB + UI writes so we don't touch a gone view.
+                if (!isAdded) return@launch
+
+                mScriptsViewModel.updateScript(script)
+
+                if (isShowing) {
+
+                    if (sr.scExitCode.equals(0)) {
+                        binding.mdStatusImageView.setImageResource(R.drawable.ic_outline_check_circle_24px)
+                        binding.mdStatusPb.visibility = View.INVISIBLE
+                    } else {
+                        binding.mdStatusImageView.setImageResource(R.drawable.ic_outline_error_outline_24px)
+                        binding.mdStatusPb.visibility = View.INVISIBLE
+                    }
+
+                    binding.mdOutContent.setText(script.scOutput)
+                    binding.mdOutContent.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
+
+    override fun onScriptRunSilent(script: AccaScript) {
+        launch {
+            Toast.makeText(mContext, "Running..\n" + script.scName, Toast.LENGTH_SHORT).show()
+            val sr = runScript(script)
+            mScriptsViewModel.updateScript(script)
+            Toast.makeText(mContext, "Finished with result " + sr.scExitCode.equals(0).toString().uppercase(), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun onAddScript()
+    {
+        MaterialDialog(mContext).show {
+
+            noAutoDismiss()
+            title(text = getString(R.string.new_script))
+            val binding = ScriptNeweditDialogBinding.inflate(layoutInflater)
+            customView(view = binding.root)
+            var script = AccaScript(0,"","","","",0)
+
+            positiveButton { dialog ->
+
+                if (binding.scriptNameEd.text.trim().isEmpty()) {
+                    binding.scriptNameEd.requestFocus() ; return@positiveButton }
+
+                script.scName = binding.scriptNameEd.text.toString()
+                script.scDescription = binding.scriptDescriptionEd.text.toString()
+                script.scBody = binding.scriptBodyTextEd.text.toString()
+
+                mScriptsViewModel.copyScript(script)
+                dismiss()
+            }
+
+            negativeButton { dismiss() }
+        }
+    }
+
+    override fun onEditScript(script: AccaScript)
+    {
+        MaterialDialog(mContext).show {
+
+            noAutoDismiss()
+            title(text = script.scName)
+            val binding = ScriptNeweditDialogBinding.inflate(layoutInflater)
+            customView(view = binding.root)
+            binding.scriptNameEd.setText(script.scName)
+            binding.scriptDescriptionEd.setText(script.scDescription)
+            binding.scriptBodyTextEd.setText(script.scBody)
+
+            positiveButton { dialog ->
+
+                if (binding.scriptNameEd.text.trim().isEmpty()) {
+                    binding.scriptNameEd.requestFocus() ; return@positiveButton }
+
+                script.scName = binding.scriptNameEd.text.toString()
+                script.scDescription = binding.scriptDescriptionEd.text.toString()
+                script.scBody = binding.scriptBodyTextEd.text.toString()
+
+                mScriptsViewModel.updateScript(script)
+                dismiss()
+            }
+
+            negativeButton { dismiss() }
+        }
+    }
+
+    override fun onRenameScript(script: AccaScript)
+    {
+        // Rename the selected script
+        MaterialDialog(mContext).show {
+            title(R.string.script_name)
+            message(R.string.dialog_script_name_message)
+            input(prefill = script.scName) { _, text ->
+                script.scName = text.toString()
+                mScriptsViewModel.updateScript(script)
+            }
+            positiveButton(R.string.save)
+            negativeButton(android.R.string.cancel)
+        }
+    }
+
+    override fun onCopyScript(script: AccaScript)
+    {
+        MaterialDialog(mContext).show {
+
+            noAutoDismiss()
+            title(text = getString(R.string.menu_option_copy))
+            val binding = ScriptNeweditDialogBinding.inflate(layoutInflater)
+            customView(view = binding.root)
+            binding.scriptNameEd.setText(script.scName)
+            binding.scriptDescriptionEd.setText(script.scDescription)
+            binding.scriptBodyTextEd.setText(script.scBody)
+
+            positiveButton { dialog ->
+
+                if (binding.scriptNameEd.text.trim().isEmpty()) {
+                    binding.scriptNameEd.requestFocus() ; return@positiveButton }
+
+                script.scName = binding.scriptNameEd.text.toString()
+                script.scDescription = binding.scriptDescriptionEd.text.toString()
+                script.scBody = binding.scriptBodyTextEd.text.toString()
+
+                mScriptsViewModel.copyScript(script)
+                dismiss()
+            }
+
+            negativeButton { dismiss() }
+        }
+    }
+
+    override fun onDeleteScript(script: AccaScript)
+    {
+        mScriptsViewModel.deleteScript(script)
+        Toast.makeText(mContext, "deleteScript:\n"+script.scName, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onMoveScript(script: AccaScript, up: Boolean)
+    {
+        // Same result as a drag, reachable without one: needed for TalkBack, and easier than
+        // dragging across a long list. The adapter is the source of truth for the visible
+        // order, so ask it where the script currently sits rather than trusting a stale index.
+        val from = mScriptesAdapter.positionOf(script)
+        if (from < 0) return
+        val to = if (up) from - 1 else from + 1
+        if (to < 0 || to >= mScriptesAdapter.itemCount) return
+
+        if (mScriptesAdapter.onItemMove(from, to))
+            mScriptsViewModel.reorderScripts(mScriptesAdapter.currentOrder())
+    }
+
+}

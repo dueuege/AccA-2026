@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_deep_diag"
+        android:icon="@drawable/ic_report_problem"
+        android:title="@string/deep_diagnostic"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_capture"
+        android:title="@string/log_capture"
+        app:showAsAction="never" />
+
+</menu>

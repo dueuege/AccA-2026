@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary">#1a73e8</color>
+    <color name="color_primary_variant">#0049b5</color>
+    <color name="color_secondary">@color/color_primary</color>
+    <color name="color_secondary_variant">@color/color_primary_variant</color>
+
+    <color name="color_surface">#ffffff</color>
+    <color name="color_background">@color/color_surface</color>
+    <color name="color_error">#b00020</color>
+
+    <color name="color_warning">@color/color_surface</color>
+
+    <color name="color_shadow">#4D000000</color>
+
+    <color name="color_on_primary">#000000</color>
+    <color name="color_on_secondary">@color/color_surface</color>
+    <color name="color_on_background">#000000</color>
+    <color name="color_on_surface">#000000</color>
+    <color name="color_on_error">#ffffff</color>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="bmc_yellow">#FFDD00</color>
+    <color name="kofi_red">#FF5E5B</color>
+
+    <!-- Blocked settings. Same blue as the rest of the app: this is an ACC screen, not a
+         separate product. The only distinguishing signal is a soft warning tint on the banner
+         and the item rail, which reads as "handle with care" without changing app identity. -->
+    <color name="blocked_accent">@color/color_primary</color>
+    <color name="blocked_rail">#E0A800</color>
+    <color name="blocked_banner_bg">#FFF8E6</color>
+    <color name="blocked_banner_fg">#5A4300</color>
+</resources>

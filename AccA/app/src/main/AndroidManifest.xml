@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="mattecarra.accapp">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- WidgetService falls back to ContextCompat.startForegroundService(); API 26+ requires
+         this permission to be declared or the call throws SecurityException. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- rc15 charge meter: post the ongoing meter notification on API 33+. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:name=".MainApplication"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:theme="@style/AccaTheme.DayNight">
+
+        <activity
+            android:name=".activities.MainActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AccaTheme.DayNight.Launcher"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.LogViewerActivity"
+            android:label="@string/title_activity_log_view"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="mattecarra.accapp.activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.BatteryDialogActivity"
+            android:configChanges="keyboardHidden|screenLayout|screenSize|smallestScreenSize"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/StyleWidgetDialogActivity"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".activities.AboutActivity"
+            android:parentActivityName=".activities.MainActivity" />
+
+        <activity android:name=".activities.AccConfigEditorActivity" />
+        <activity
+            android:name=".activities.SwitchFinderActivity"
+            android:label="@string/find_switch_title"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboardHidden|uiMode"
+            android:parentActivityName=".activities.AccConfigEditorActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="mattecarra.accapp.activities.AccConfigEditorActivity" />
+        </activity>
+        <activity android:name=".activities.SettingsActivity" />
+        <activity android:name=".activities.BlockedSettingsActivity" />
+        <activity android:name=".activities.ExportProfilesActivity" />
+        <activity android:name=".activities.ImportProfilesActivity" />
+        <activity android:name=".activities.ExportScriptsActivity" />
+        <activity android:name=".activities.ImportScriptsActivity" />
+
+        <service
+            android:name=".services.AccProfileTileService"
+            android:exported="false"
+            android:icon="@drawable/ic_battery_charging_80"
+            android:label="Acc profile editor"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".services.AccdTileService"
+            android:exported="false"
+            android:icon="@drawable/ic_battery_charging_80"
+            android:label="Accd manager"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="mattecarra.accapp.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
+        <service
+            android:name=".services.WidgetService"
+            android:exported="false">
+        </service>
+
+        <service
+            android:name=".services.ChargeMeterService"
+            android:exported="false" />
+
+        <receiver
+            android:name=".receivers.UpdateDismissReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".receivers.ChargeMeterPowerReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="xml.BatteryInfoWidget"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_foreground"
+            android:label="@string/widget_batteryInfo_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE_OPTIONS" />
+                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_battery_hw23" />
+        </receiver>
+
+        <!-- directBootAware + LOCKED_BOOT_COMPLETED: BOOT_COMPLETED reaches a normal receiver only
+             AFTER the first unlock on FBE phones, so daemon start waited for the user ("ACC settings
+             do not apply after a reboot until it's unlocked"). The locked branch starts the /data/adb
+             daemons (DE storage) without touching CE prefs. MY_PACKAGE_REPLACED was handled in code
+             but never declared here, so the after-update restart never fired.
+
+             exported="false". Exported with no permission, every action here was reachable by an
+             EXPLICIT broadcast from any installed app; BOOT_COMPLETED is only protected against
+             IMPLICIT delivery. Verified on a Pixel 6a: "am broadcast -n" from another uid ran the
+             root daemon init.
+
+             android:permission="RECEIVE_BOOT_COMPLETED" was the first answer and it is not one:
+             that permission is normal-level and granted automatically to anything that asks for
+             it, so a hostile app declares it and walks straight through. Measured on the same
+             phone, com.android.shell holds it granted=true.
+
+             exported="false" is the real gate. The first four actions are PROTECTED broadcasts,
+             which the system delivers to a manifest receiver whether or not it is exported, so
+             every genuine boot path still works while explicit delivery from another app cannot
+             reach it. QUICKBOOT_POWERON is an OEM action and may not be protected; it is kept
+             because losing it costs a slower daemon start on those phones, never correctness. -->
+        <receiver
+            android:name=".receivers.AccBootReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:directBootAware="true">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>
